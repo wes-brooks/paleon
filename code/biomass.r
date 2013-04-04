@@ -2,167 +2,110 @@ setwd("~/git/paleon")
 
 #load necessary R libraries
 library(mgcv)
-library(reshape)
+#library(reshape)
 library(plotrix)
 #library(gwselect)
 #registerCores(n=3)
 
 #Set the working directory and import the code we'll use to make heatmaps.
-#source("matplot.r")
+source("~/git/brooks/code/matplot.r")
 models = list()
 
 #Import the stem density, count, and standard deviation data
 composition <- read.csv("data/glo.forest.composition_v1_3alb.csv", header=T)
-biomass <- read.csv("data/density.ba.biomass_v1_3alb.csv", header=T)
+biomass <- read.csv("data/biomass.tablev1_3alb.csv", header=T)
+stemdensity <- read.csv("data/stem.density.wi.csv", header=T)
 
-#Total the counts for individual taxa
+#Process composition data
 p = ncol(composition)
 composition$tot = apply(composition[,4:p], 1, sum)
 composition[,4:p] = composition[,4:p] / composition$tot
 composition = composition[which(!is.na(composition$tot)),]
-composition = cbind(composition, biomass[,4:6])
+
+#Process biomass data
+p2 = ncol(biomass)
+biomass$tot = apply(biomass[,4:p2], 1, sum)
+biomass = biomass[which(!is.na(biomass$tot)),]
+composition = cbind(composition, biomass[,4:p2])
 
 
-#Remove spurious columns
-stemdensity_raw <- within(stemdensity_raw, remove(X))
-stemdensity_stdev <- within(stemdensity_stdev, remove(X))
-counts <- within(counts, remove(X))
+sp = "Oaks"
+models = list()
+gm = list()
+modeldata = data.frame(biomass=biomass[,sp], composition=composition[,sp], x=composition$x, y=composition$y)
+modeldata = modeldata[which(modeldata$biomass>0),]
+models[[sp]] = gam(log(modeldata$biomass)~s(log(modeldata$composition), k=200), family="gaussian")
+#gm[[sp]] = gam(biomass~s(composition, k=200), data=modeldata, family="gamma")
 
-#Identify rows with no data
-spp = names(stemdensity_raw)[!(names(stemdensity_raw) %in% c("Latitude", "Longitude"))]
-empty = which(apply(stemdensity_raw[,spp], 1, function(x) sum(!is.na(x)))==0)
 
-#Remove the rows with no data
-stemdensity = stemdensity_raw[-empty,]
-stemdensity_stdev = stemdensity_stdev[-empty,]
-counts = counts[-empty,]
 
-#Find the variance of the aggregate stem density by summing the variance of individual taxa
-varstemdens = apply(stemdensity_stdev, 1, function(x) {sum(ifelse(x>0, x**2, 0))})
-
-#Remove rows for which we have no variance data
-indx = as.numeric(which(!is.na(varstemdens)))
-varstemdens = varstemdens[indx]
-stemdensity = stemdensity[indx,]
-
-#Normalize the weights to average 1: this greatly speeds up the GAM-fitting
-l = length(varstemdens)
-tot = sum(1 / varstemdens)
-w = l / tot
-stemdensity$weight = w / varstemdens
-
-bw = gwlars.sel(formula=tot~Latitude+Longitude, data=stemdensity, coords=stemdensity[,c('Longitude','Latitude')], longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=FALSE)
-model = gwlars(formula=tot~Latitude+Longitude, data=stemdensity, N=1, coords=stemdensity[,c('Longitude','Latitude')], longlat=TRUE, gweight=bisquare, bw=bw, mode.select='AIC', s=NULL, method="knn", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=FALSE)
-
-#Make GAM model of the weighted stem density.
-models[["gamma"]] = gam(tot ~ s(Latitude, Longitude, k=250), data=stemdensity, family=Gamma(link=log), weights=weight, lambda=1.4)
 
 #Set the directory to store plots
-plot_dir = "../figures/"
-model = "gamma"
-genus = "tot"
-xx = range(stemdensity[,genus], na.rm=TRUE)
+plot_dir = "~/git/paleon/figures/"
+#model = "gamma"
+#genus = "tot"
+#xx = range(stemdensity[,genus], na.rm=TRUE)
+
+
+pdf(paste(plot_dir, sp, "-biomass-spline.pdf", sep=""))
+xx = c(0,1)
+yy = c(-5,12)
+plot(modeldata$composition, log(modeldata$biomass), cex=0.2, pch=20, xlim=xx, ylim=yy, col='purple', bty='n', xlab=paste(sp, " proportion", sep=""), ylab=paste(sp, " biomass", sep=""))
+par(new=T)
+plot(modeldata$composition, fitted(models[[sp]]), cex=0.2, pch=20, xlim=xx, ylim=yy, col='black', bty='n', ann=F, xaxt='n', yaxt='n')
+title(paste(sp, " biomass spline", sep=""))
+dev.off()
+
 
 
 #Put the observed stem density and the weight into matrices that we can plot as heatmaps
 #Create the matrix for the observed stem density (filled by default with NAs):
-loc = with(stemdensity, list(lat=unique(Latitude), long=unique(Longitude)))
-trees = matrix(NA, nrow=length(loc[['lat']]), ncol=length(loc[['long']]))
-rownames(trees) <- sort(unique(stemdensity$Latitude), decreasing=F)
-colnames(trees) <- sort(unique(stemdensity$Longitude), decreasing=F)
-
-#Create the matrix for the weights (filled by default with NAs):
-loc = with(stemdensity, list(lat=unique(Latitude), long=unique(Longitude)))
-weight_mat = matrix(NA, nrow=length(loc[['lat']]), ncol=length(loc[['long']]))
-rownames(weight_mat) <- sort(unique(stemdensity$Latitude), decreasing=F)
-colnames(weight_mat) <- sort(unique(stemdensity$Longitude), decreasing=F)
+loc = with(modeldata, list(lat=unique(y), long=unique(x)))
+bmmat = matrix(NA, nrow=length(loc[['lat']]), ncol=length(loc[['long']]))
+rownames(bmmat) <- sort(unique(modeldata$y), decreasing=F)
+colnames(bmmat) <- sort(unique(modeldata$x), decreasing=F)
 
 #Put the observed stem densities and weights into their lat-long matrices
-for(row in 1:dim(stemdensity)[1])
-{
-    trees[as.character(stemdensity[row, "Latitude"]), as.character(stemdensity[row, "Longitude"])] = ifelse((!is.nan(stemdensity[row, genus]) & stemdensity[row, genus]>0), stemdensity[row, genus], NA)
-
-    weight_mat[as.character(stemdensity[row, "Latitude"]), as.character(stemdensity[row, "Longitude"])] = ifelse((!is.nan(stemdensity[row, genus]) & stemdensity[row, "weight"]>0), stemdensity[row, "weight"], NA)
+for(row in 1:dim(modeldata)[1]) {
+    bmmat[as.character(modeldata$y[row]), as.character(modeldata$x[row])] = ifelse((!is.nan(modeldata$biomass[row]) & modeldata$biomass[row]>0), modeldata$biomass[row], NA)
 }
+
 
 #Put the model's fitted values into a matrix that we can plot as a heatmap (indexed by Lat, Long):
 #First, create a data frame with Lat, Long, and fitted stem density
-rows = which(!is.na(stemdensity[, genus]))
-fits = cbind(stemdensity[rows, c("Latitude", "Longitude")], fitted=models[[model]]$fit)
+rows = which(!is.na(modeldata$biomass))
+fits = cbind(modeldata[rows, c("y", "x")], fitted=fitted(models[[sp]]))
 
 #Now create a matrix of the appropriate dimensions (filled with NAs by default)
 fitted = matrix(NA, nrow=length(loc[['lat']]), ncol=length(loc[['long']]))
-rownames(fitted) <- sort(unique(fits$Latitude), decreasing=F)
-colnames(fitted) <- sort(unique(fits$Longitude), decreasing=F)
+rownames(fitted) <- sort(unique(modeldata$y), decreasing=F)
+colnames(fitted) <- sort(unique(modeldata$x), decreasing=F)
 
 #Put the fittes stem densities into the lat-long matrix
-for(row in 1:dim(stemdensity)[1])
-    fitted[as.character(fits$Latitude[row]), as.character(fits$Longitude[row])] = fits$fitted[row]                  
+for(row in 1:dim(modeldata)[1])
+    fitted[as.character(fits$y[row]), as.character(fits$x[row])] = fits$fitted[row]                  
+
+
+resid = log(bmmat) - fitted
 
 
 #Make several plots of the model and the data:
-pdf(paste(plot_dir, "model_log_heatmap_", model, ".pdf", sep=""))
+pdf(paste(plot_dir, sp, "-biomass-residual.pdf", sep=""))
 par(bty='n')
-matplot(log(fitted), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=log(xx))
-title(paste("log(expected[stem density]) from ", model, " model", sep=""))
+gwr.matplot(resid, c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, na.color="grey75")
+title(paste(sp, " biomass residual (log scale)", sep=""))
 dev.off()
 
-pdf(paste(plot_dir, "model_heatmap_", model, ".pdf", sep=""))
+
+pdf(paste(plot_dir, sp, "-biomass-observed.pdf", sep=""))
 par(bty='n')
-matplot(fitted, c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=xx)
-title(paste("expected[stem density] from ", model, " model", sep=""))
+gwr.matplot(log(bmmat), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, na.color="grey75")
+title(paste(sp, " observed biomass (log scale)", sep=""))
 dev.off()
 
-pdf(paste(plot_dir, "model_stdev_heatmap_", model, ".pdf", sep=""))
+
+pdf(paste(plot_dir, sp, "-biomass-fitted.pdf", sep=""))
 par(bty='n')
-matplot(sqrt(fitted**2 * models[[model]]$scale), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
-title(paste("stdev(stemdensity) from ", model, " model", sep=""))
-dev.off()
-
-pdf(paste(plot_dir, "model_log_stdev_heatmap_", model, ".pdf", sep=""))
-par(bty='n')
-matplot(log(sqrt(fitted**2 * models[[model]]$scale)), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
-title(paste("log(stdev[stem density]) from ", model, " model", sep=""))
-dev.off()
-
-pdf(paste(plot_dir, "model_Elog_heatmap_", model, ".pdf", sep=""))
-par(bty='n')
-matplot(log(fitted*models[[model]]$scale) + digamma(1/models[[model]]$scale), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=log(xx))
-title(paste("expected[log(stem density)] from ", model, " model\n(variance is constant on this scale)", sep=""))
-dev.off()
-
-pdf(paste(plot_dir, "diagnostics", ".pdf", sep=""))
-gam.check(models[[model]])
-dev.off()                    
-
-#plot the heatmap of stemdensity
-pdf(paste(plot_dir, "data_heatmap.pdf", sep=""))
-par(bty='n')
-matplot(trees, c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=xx)
-title("measured stem density")
-dev.off()
-
-#plot the heatmap of stemdensity
-pdf(paste(plot_dir, "log_data_heatmap.pdf", sep=""))
-par(bty='n')
-matplot(log(trees), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=log(xx))
-title("log of measured stem density")
-dev.off()
-
-#plot the heatmap of the weights
-pdf(paste(plot_dir, "log_weight_heatmap.pdf", sep=""))
-par(bty='n')
-matplot(log(weight_mat), c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
-title("log of weight used in fitting the GAM models")
-dev.off()
-
-#plot the heatmap of the weights
-pdf(paste(plot_dir, "weight_heatmap.pdf", sep=""))
-par(bty='n')
-matplot(weight_mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
-title("weight used in fitting the GAM models")
-dev.off()
-
-pdf(paste(plot_dir, "density_histogram.pdf", sep=""))
-hist(stemdensity[,genus], breaks=30)
+gwr.matplot(fitted, c(1,1), c(1,0), c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F, na.color="grey75")
+title(paste(sp, " fitted biomass (log scale)", sep=""))
 dev.off()
