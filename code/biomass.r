@@ -3,7 +3,7 @@ setwd("~/git/paleon")
 #load necessary R libraries
 library(mgcv)
 #library(reshape)
-library(plotrix)
+#library(plotrix)
 #library(gwselect)
 #registerCores(n=3)
 
@@ -14,7 +14,6 @@ models = list()
 #Import the stem density, count, and standard deviation data
 composition <- read.csv("data/glo.forest.composition_v1_3alb.csv", header=T)
 biomass <- read.csv("data/biomass.tablev1_3alb.csv", header=T)
-stemdensity <- read.csv("data/stem.density.wi.csv", header=T)
 
 #Process composition data
 p = ncol(composition)
@@ -32,11 +31,30 @@ composition = cbind(composition, biomass[,4:p2])
 sp = "Oaks"
 models = list()
 gm = list()
-modeldata = data.frame(biomass=biomass[,sp], composition=composition[,sp], x=composition$x, y=composition$y)
-modeldata = modeldata[which(modeldata$biomass>0),]
-models[[sp]] = gam(log(modeldata$biomass)~s(log(modeldata$composition), k=200), family="gaussian")
-#gm[[sp]] = gam(biomass~s(composition, k=200), data=modeldata, family="gamma")
+indx = which(biomass[,sp]>0)
+modeldata = list(indicator=ifelse(biomabiomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
+modeldata = list(indicator=ifelse(biomabiomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
+paleon.dist = dist(cbind(modeldata$x, modeldata$y))
 
+
+sp = "Oaks"
+models = list()
+gm = list()
+indx = which(biomass[,sp]>0)
+modeldata = list(indicator=ifelse(biomabiomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
+modeldata = list(indicator=ifelse(biomabiomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
+paleon.dist = dist(cbind(modeldata$x, modeldata$y))
+pd2 = as.matrix(paleon.dist)
+
+
+modeldata = data.frame(biomass=biomass[,sp], logbiomass=log(biomass[,sp]), composition=composition[,sp], x=composition$x, y=composition$y)
+modeldata = modeldata[which(modeldata$biomass>0),]
+models[[sp]] = gam(logbiomass~s(composition, k=100) + s(x, y, k=200), data=modeldata, family="gaussian")
+
+gm[[sp]] = gam(biomass~s(composition, k=100) + s(x,y, k=100), data=modeldata, family="Gamma")
+gm[[sp]] = gam(biomass~s(composition, k=50), data=modeldata, family="gaussian")
+
+gam(modeldata$biomass~s(modeldata$composition, k=50), family="Gamma")
 
 
 
@@ -56,6 +74,8 @@ plot(modeldata$composition, fitted(models[[sp]]), cex=0.2, pch=20, xlim=xx, ylim
 title(paste(sp, " biomass spline", sep=""))
 dev.off()
 
+
+plot(modeldata$composition, fitted(gm[[sp]]), cex=0.2, pch=20, xlim=xx, ylim=yy, col='black', bty='n', ann=F, xaxt='n', yaxt='n')
 
 
 #Put the observed stem density and the weight into matrices that we can plot as heatmaps
