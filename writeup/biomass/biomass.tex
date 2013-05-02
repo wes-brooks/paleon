@@ -58,8 +58,29 @@ As a practical matter, one implication is that grid cells where there were small
 
 
 \section{Models}
-There are two possible directions here: a two-stage hierarchical model, where in stage one we randomly decide whether a given cell has nonzero biomass, and then if so stage two randomly sets the biomass; alternatively, a single-stage model with zero-inflation, maybe one that could be tuned like a \verb!glm! (e.g. a Tweedie model).
+There are two possible directions here: a two-stage hierarchical model, where in stage one we randomly decide whether a given cell has nonzero biomass, and then if so stage two randomly sets the biomass; alternatively, a single-stage model with zero-inflation, maybe one that could be tuned like a \verb!glm! (e.g. a Tweedie model).\\
 
+
+\subsection{Two-stage model}
+The two-stage model has one stage for determining the probability that a given species has zero biomass in a cell and another stage for estimating the distribution of biomass, given that it is nonzero.
+
+
+\subsection{Single-stage (Tweedie model)}
+Tweedie family of distributions for $\theta \in (0,1)$:\\
+\begin{equation*}
+  \begin{split}
+    N &\sim \text{Poisson}(\lambda)    \\
+    Z_i &\sim \text{Gamma}(\alpha, \tau)    \\
+    Y &= \sum\limits_{i=1}^N Z_i \\
+    \lambda &= \phi^{-1} \frac{\mu^{2-\theta}}{2-\theta} \\
+    \alpha &= \frac{2-\theta}{\theta-1} \\
+    \tau &= \phi (\theta - 1) \mu^{\theta - 1}    \\
+    \eta(s) &= f\left(\bm{x}(s)\right) = g\left(\mu(s)\right)\\
+    \mu(s) &= g^{-1}\left(\eta(s)\right)
+  \end{split}
+\end{equation*}
+
+Where $g(\cdot)$ is the link function, $\bm{x}(s)$ is the vector of covariates ($x, y$ coordinates and composition fraction) at location $s$.
 
 \section{Figures}
 \begin{figure}

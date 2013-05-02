@@ -32,7 +32,7 @@ sp = "Oaks"
 models = list()
 gm = list()
 indx = which(biomass[,sp]>0)
-modeldata = list(indicator=ifelse(biomabiomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
+modeldata = list(indicator=ifelse(biomass[biomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
 modeldata = list(indicator=ifelse(biomabiomass=biomass[indx,sp], logbiomass=log(biomass[indx,sp]), composition=composition[indx,sp], x=composition[indx,'x'], y=composition[indx,'y'])
 paleon.dist = dist(cbind(modeldata$x, modeldata$y))
 
@@ -50,6 +50,7 @@ pd2 = as.matrix(paleon.dist)
 modeldata = data.frame(biomass=biomass[,sp], logbiomass=log(biomass[,sp]), composition=composition[,sp], x=composition$x, y=composition$y)
 modeldata = modeldata[which(modeldata$biomass>0),]
 models[[sp]] = gam(logbiomass~s(composition, k=100) + s(x, y, k=200), data=modeldata, family="gaussian")
+glm(biomass~composition, data=modeldata, family=tweedie(var.power=1.4,link.power=0)) -> m1
 
 gm[[sp]] = gam(biomass~s(composition, k=100) + s(x,y, k=100), data=modeldata, family="Gamma")
 gm[[sp]] = gam(biomass~s(composition, k=50), data=modeldata, family="gaussian")

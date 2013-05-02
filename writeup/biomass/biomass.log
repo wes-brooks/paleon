@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  17 APR 2013 12:32
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  2 MAY 2013 14:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -653,41 +653,49 @@ File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 LaTeX Font Info:    Try loading font information for U+msb on input line 45.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-) [1
+)
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
+
+ []
+
+[1
 
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
+
+ []
+
 \openout4 = `biomass.fff'.
 
-
-(biomass.fff) AED endfloat: Processing end Figures and Tables [2]
+(biomass.fff) [2] AED endfloat: Processing end Figures and Tables [3]
 (./biomass.lof)
 \tf@lof=\write6
 \openout6 = `biomass.lof'.
 
- [3
+ [4
 
 
 ] (./biomass.fff
 File: ../../figures/Oaks-biomass-spline.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-spline.pdf" > [4]
+<use  "../../figures/Oaks-biomass-spline.pdf" > [5]
 File: ../../figures/Oaks-biomass-observed.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-observed.pdf" > [5]
+<use  "../../figures/Oaks-biomass-observed.pdf" > [6]
 File: ../../figures/Oaks-biomass-fitted.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-fitted.pdf" > [6]
+<use  "../../figures/Oaks-biomass-fitted.pdf" > [7]
 File: ../../figures/Oaks-biomass-residual.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-residual.pdf" > [7]) (./biomass.aux) ) 
+<use  "../../figures/Oaks-biomass-residual.pdf" > [8]) (./biomass.aux) ) 
 Here is how much of TeX's memory you used:
- 4404 strings out of 494004
- 61513 string characters out of 3150890
- 122862 words of memory out of 3000000
- 7556 multiletter control sequences out of 15000+200000
- 15997 words of font info for 56 fonts, out of 3000000 for 9000
+ 4407 strings out of 494004
+ 61561 string characters out of 3150890
+ 123862 words of memory out of 3000000
+ 7558 multiletter control sequences out of 15000+200000
+ 16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,5n,38p,521b,313s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,18n,38p,521b,311s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on biomass.pdf (7 pages).
+Output written on biomass.pdf (8 pages).
