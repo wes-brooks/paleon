@@ -48,21 +48,67 @@
 
 
 \section{Introduction}
-Our objective is a  model of the biomass of each species in each grid cell, where the only parameters used to calibrate the models are location and species composition. It is important to come up with an estimated probability that a given cell will have no biomass of a given species, and also to model the variance of the biomass estimate.
+Our objective is a  model of the biomass of each species in each grid cell, where the only parameters used to calibrate the models are location and species composition. It is important to come up with an estimated probability that a given cell will have no biomass of a given species, and also to model the variance of the biomass estimate.\\
 
 
 \section{Philosophy}
-Jun and I discussed the interpretation of a model for biomass. At the time I saw the effort being directed toward getting a model that tells us, based on our survey of the forests at time of settlement, how much biomass there was on the landscape at time of settlement. On the other hand, Jun says that the goal is to model the process that gives rise to biomass on the landscape, observed through the survey at time of settlement.
+Consider twi different kinds of errors:
 
-As a practical matter, one implication is that grid cells where there were small but nonzero biomass observations are treated differently. In my view, the fact that, say, a spruce tree was seen in grid cell 517 is enough to say that there is zero probability of there being no spruce biomass in cell 517. In Jun's view, we could easily imagine the same process populating the landscape in such a way that, randomly, cell 517 has no spruce trees. So there's a positive probability of zero spruce in cell 517.
+\begin{itemize}
+  \item Natural variability in biomass (noise)
+  \item Measurement error
+\end{itemize}
+
+Jun and I discussed the interpretation of a model for biomass. At the time I saw the effort being directed toward getting a model that tells us, based on our survey of the forests at time of settlement, how much biomass there was on the landscape at time of settlement. On the other hand, Jun says that the goal is to model the process that gives rise to biomass on the landscape, observed through the survey at time of settlement.\\
+
+As a practical matter, one implication is that grid cells where there were small but nonzero biomass observations are treated differently. In my view, the fact that, say, a spruce tree was seen in grid cell 517 is enough to say that there is zero probability of there being no spruce biomass in cell 517. In Jun's view, we could easily imagine the same process populating the landscape in such a way that, randomly, cell 517 has no spruce trees. So there's a positive probability of zero spruce in cell 517.\\
+
+If measurement error was the only possible error, then it we could say that observing even a single spruce tree in a cell means that spruce biomass is nonzero in that cell. But since there is also random noise, observing a spruce tree doesn't guarantee that spruce biomass will be nonzero the next day or year or whenever...\\
+
+
+\section{Chris' proposal}
+Chris proposed the following:\*
+Let $Y_{k,s}$ denote the biomass of taxon $k$ in grid cell $s$. Let $n_s$ be the number of PLS survey points within cell $s$, and note that two trees are sampled at each survey point. Then, letting $\hat{\lambda}_{s,i}$ be the estimate for total stem density (i.e. taxa are aggregated) at survey point $s_i$, $d_{s,i,j}$ the measured DBH for tree $j$ at survey point $s_i$, and $\left(a_k, b_k\right)$ allometric parameters for taxon $k$, the biomass measurement for taxon $k$ in grid cell $s$ is:\*
+\begin{equation*}
+  \begin{split}
+    Y_{k,s} &= \left[ n_s \right]^{-1} \sum\limits_{i=1}^{n_s} \hat{\lambda}_{s,i} \sum\limits_{j=1}^{2} 2^{-1} a_k d_{s,i,j}^{b_k} I(\text{tree}_{s,i,j} \text{ is in taxon }k)\\
+    &= \left[ 2 \cdot n_s \right]^{-1} \sum\limits_{i=1}^{n_s} \hat{\lambda}_{s,i} \sum\limits_{j=1}^{2} h_k(d_{s,i,j}) A_{s,i,j}(k)
+  \end{split}
+\end{equation*}
+Where $h_k(\cdot)$ is the allometric equation for taxon $k$ and $A_{s,i,j}(k)$ is is the indicator of the event that $\text{tree}_{s,i,j}$ is in taxon $k$.\\
+
+Now we want to use these measurement of biomass as the observations on which a model of biomass will be based. For this, Chris proposes a log-normal model for $Y_{k,s}$ based on taxon $k$'s composition fraction, $p_k(s)$:\*
+\begin{equation*}
+  \begin{split}
+    \log Y_{k,s} &\sim \mathcal{N}\left(g_k(s), \hat{V}_{k,s}\right)\\
+    g_k(s) &\sim \text{GP}\left(f(p_k(s)), \Sigma \right)
+  \end{split}
+\end{equation*}
+That is, the Gaussian process $g_k(\cdot)$ sets the mean for a log-normal model of $Y_{k,s}$. The variance components are $\Sigma$, which is a spatial covariance, and $V_{k,s}$, which is random noise.\\
+
+
+\section{First look}
+Consider the `Oaks' taxon. In Figure \ref{fig:oaks-biomass-observed}, the log of oak biomass is plotted on a heatmap. In order to \\
 
 
 \section{Models}
+Here are some ideas for the biomass model:\*
+\begin{itemize}
+  \item Treat $g_k(\cdot)$ as a Gausian Markov random field, coding the cells' neighborhood structure, and then fit the model with INLA
+  \item 
+\end{itemize}
+
 There are two possible directions here: a two-stage hierarchical model, where in stage one we randomly decide whether a given cell has nonzero biomass, and then if so stage two randomly sets the biomass; alternatively, a single-stage model with zero-inflation, maybe one that could be tuned like a \verb!glm! (e.g. a Tweedie model).\\
 
 
 \subsection{Two-stage model}
-The two-stage model has one stage for determining the probability that a given species has zero biomass in a cell and another stage for estimating the distribution of biomass, given that it is nonzero.
+The two-stage model (sometimes called the delta approach) has one stage for determining the probability that a given species has zero biomass in a cell and another stage for estimating the distribution of biomass, given that it is nonzero. Since in the observed data there is an almost perfect correspondence between cells where biomass is zero and cells where composition is zero, the first stage of the model needs to look at the composition of neighboring cells:\*
+\begin{equation*}
+  \begin{split}
+    B_{k,s} &\sim \text{Bernoulli}(\mu_{s,k})\\
+    \mu_{s, k} &= \alpha_{s,k} + \sum\limits_{i \in \mathcal{N}_s} \beta p_k(s)
+  \end{split}
+\end{equation*}
 
 
 \subsection{Single-stage (Tweedie model)}
@@ -85,25 +131,29 @@ Where $g(\cdot)$ is the link function, $\bm{x}(s)$ is the vector of covariates (
 \section{Figures}
 \begin{figure}
 	\begin{center}
-	\includegraphics[width=5in]{../../figures/Oaks-biomass-spline.pdf}
-	\end{center}
-\end{figure}
-
-\begin{figure}
-	\begin{center}
 	\includegraphics[width=5in]{../../figures/Oaks-biomass-observed.pdf}
+	\caption{\label{fig:oaks-biomass-observed}}
 	\end{center}
 \end{figure}
 
 \begin{figure}
 	\begin{center}
 	\includegraphics[width=5in]{../../figures/Oaks-biomass-fitted.pdf}
+	\caption{\label{fig:oaks-biomass-fitted}}
 	\end{center}
 \end{figure}
 
 \begin{figure}
 	\begin{center}
 	\includegraphics[width=5in]{../../figures/Oaks-biomass-residual.pdf}
+	\caption{\label{fig:oaks-biomass-residual}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Oaks-biomass-spline.pdf}
+	\caption{\label{fig:oaks-biomass-spline}}
 	\end{center}
 \end{figure}
 

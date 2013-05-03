@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  2 MAY 2013 14:59
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  3 MAY 2013 13:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -654,7 +654,23 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 45.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 61--62
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 58.
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 58.
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
 
  []
 
@@ -662,40 +678,76 @@ Underfull \hbox (badness 10000) in paragraph at lines 61--62
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 64--65
+Underfull \hbox (badness 10000) in paragraph at lines 66--67
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--79
+
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+
+ []
+
+
+LaTeX Warning: Reference `fig:oaks-biomass-observed' on page 3 undefined on inp
+ut line 91.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--102
+
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
 
  []
 
 \openout4 = `biomass.fff'.
 
-(biomass.fff) [2] AED endfloat: Processing end Figures and Tables [3]
+(biomass.fff) [4] AED endfloat: Processing end Figures and Tables [5]
 (./biomass.lof)
 \tf@lof=\write6
 \openout6 = `biomass.lof'.
 
- [4
+ [6
 
 
 ] (./biomass.fff
-File: ../../figures/Oaks-biomass-spline.pdf Graphic file (type QTm)
-
-<use  "../../figures/Oaks-biomass-spline.pdf" > [5]
 File: ../../figures/Oaks-biomass-observed.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-observed.pdf" > [6]
+<use  "../../figures/Oaks-biomass-observed.pdf" > [7]
 File: ../../figures/Oaks-biomass-fitted.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-fitted.pdf" > [7]
+<use  "../../figures/Oaks-biomass-fitted.pdf" > [8]
 File: ../../figures/Oaks-biomass-residual.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-residual.pdf" > [8]) (./biomass.aux) ) 
+<use  "../../figures/Oaks-biomass-residual.pdf" > [9]
+File: ../../figures/Oaks-biomass-spline.pdf Graphic file (type QTm)
+
+<use  "../../figures/Oaks-biomass-spline.pdf" > [10]) (./biomass.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4407 strings out of 494004
- 61561 string characters out of 3150890
- 123862 words of memory out of 3000000
- 7558 multiletter control sequences out of 15000+200000
+ 4429 strings out of 494004
+ 61995 string characters out of 3150890
+ 124862 words of memory out of 3000000
+ 7577 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,18n,38p,521b,311s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,18n,38p,523b,377s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on biomass.pdf (8 pages).
+Output written on biomass.pdf (10 pages).
