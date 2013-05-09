@@ -11,22 +11,7 @@ library(mgcv)
 source("~/git/brooks/code/matplot.r")
 models = list()
 
-#Import the stem density, count, and standard deviation data
-composition <- read.csv("data/glo.forest.composition_v1_3alb.csv", header=T)
-biomass <- read.csv("data/biomass.tablev1_3alb.csv", header=T)
-
-#Process composition data
-p = ncol(composition)
-composition$tot = apply(composition[,4:p], 1, sum)
-composition[,4:p] = composition[,4:p] / composition$tot
-composition = composition[which(!is.na(composition$tot)),]
-
-#Process biomass data
-p2 = ncol(biomass)
-biomass$tot = apply(biomass[,4:p2], 1, sum)
-biomass = biomass[which(!is.na(biomass$tot)),]
-composition = cbind(composition, biomass[,4:p2])
-
+source("biomass-import.r")
 
 sp = "Oaks"
 models = list()
