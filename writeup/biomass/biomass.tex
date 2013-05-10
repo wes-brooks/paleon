@@ -88,15 +88,11 @@ That is, the Gaussian process $g_k(\cdot)$ sets the mean for a log-normal model 
 
 
 \section{First look}
-Consider the `Oaks' taxon. In Figure \ref{fig:oaks-biomass-observed}, the log of oak biomass is plotted on a heatmap. In order to \\
+Consider the `Oaks' taxon. In Figure \ref{fig:oaks-biomass-observed}, the log of oak biomass is plotted on a heatmap. \\
 
 
 \section{Models}
-Here are some ideas for the biomass model:\*
-\begin{itemize}
-  \item Treat $g_k(\cdot)$ as a Gausian Markov random field, coding the cells' neighborhood structure, and then fit the model with INLA
-  \item 
-\end{itemize}
+
 
 There are two possible directions here: a two-stage hierarchical model, where in stage one we randomly decide whether a given cell has nonzero biomass, and then if so stage two randomly sets the biomass; alternatively, a single-stage model with zero-inflation, maybe one that could be tuned like a \verb!glm! (e.g. a Tweedie model).\\
 
@@ -109,6 +105,8 @@ The two-stage model (sometimes called the delta approach) has one stage for dete
     \mu_{s, k} &= \alpha_{s,k} + \sum\limits_{i \in \mathcal{N}_s} \beta p_k(s)
   \end{split}
 \end{equation*}
+
+Note that the composition is currently an observation, not a model. Since composition fraction is zero if and only if the biomass is zero, this cell's composition fraction is not a useful variable in modeling its probability of zero biomass. Instead, we use the mean composition fraction across the first-order neighborhood.
 
 
 \subsection{Single-stage (Tweedie model)}
@@ -127,6 +125,13 @@ Tweedie family of distributions for $\theta \in (0,1)$:\\
 \end{equation*}
 
 Where $g(\cdot)$ is the link function, $\bm{x}(s)$ is the vector of covariates ($x, y$ coordinates and composition fraction) at location $s$.
+
+The variance function of a Tweedie model is
+\[
+  V(\mu)  = \phi^{-1} \frac{\mu^{2-p}}{2-p}
+\]
+
+So it may be possible to select the power parameter $p$ based on the shape of the deviance residuals (i.e. the location-scale plot of the deviance residuals). The deviance residuals should have constant variance, so $p$ was selected to acheive that goal (see Figure \ref{fig:oaks-tweedie2-location-scale}).
 
 \section{Figures}
 \begin{figure}
@@ -156,6 +161,66 @@ Where $g(\cdot)$ is the link function, $\bm{x}(s)$ is the vector of covariates (
 	\caption{\label{fig:oaks-biomass-spline}}
 	\end{center}
 \end{figure}
+
+
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-Tweedie-E-biomass.pdf}
+	\caption{\label{fig:oaks-biomass-observed}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-Tweedie2-E-biomass.pdf}
+	\caption{\label{fig:oaks-biomass-fitted}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-Tweedie-P0-biomass.pdf}
+	\caption{\label{fig:oaks-biomass-residual}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-Tweedie2-P0-biomass.pdf}
+	\caption{\label{fig:oaks-biomass-spline}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-P0-biomass-tweedie2-v-delta.pdf}
+	\caption{\label{fig:oaks-biomass-spline}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-P0-biomass-tweedie2-v-delta.pdf}
+	\caption{\label{fig:oaks-biomass-spline}}
+	\end{center}
+\end{figure}
+
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-biomass-tweedie2-v-delta.pdf}
+	\caption{\label{fig:oaks-biomass-spline}}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[width=5in]{../../figures/Exploration/Oak-Tweedie2-location-scale.pdf}
+	\caption{\label{fig:oaks-tweedie2-location-scale}}
+	\end{center}
+\end{figure}
+
 
 \section{References}
 %\bibliographystyle{chicago}
