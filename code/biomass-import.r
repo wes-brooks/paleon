@@ -4,6 +4,7 @@ setwd("~/git/paleon")
 composition <- read.csv("data/glo.forest.composition_v1_3alb.csv", header=T)
 biomass <- read.csv("data/biomass.tablev1_3alb.csv", header=T)
 biomass.wi <- read.csv("data/biomassbysp_1_3_albwisc.csv", header=T)
+stemdens <- read.csv("data/density.ba.biomass_v1_3alb.csv", header=T)
 
 #Process the Wisconsin biomass data
 p0 = ncol(biomass.wi)
@@ -26,3 +27,9 @@ indx = which( outer(biomass.wi$x, composition$x, "==") &
        outer(biomass.wi$y, composition$y, "=="), 
        arr.ind=TRUE)
 composition.wi = composition[indx[,2],]
+
+#Extract the WI stemdensity data
+indx = which( outer(biomass.wi$x, stemdens$x, "==") & 
+       outer(biomass.wi$y, stemdens$y, "=="), 
+       arr.ind=TRUE)
+stemdens.wi = stemdens[indx[,2],]

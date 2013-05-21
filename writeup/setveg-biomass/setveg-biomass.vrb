@@ -1,0 +1,8 @@
+\frametitle{Tweedie model}
+The Tweedie model is a Gamma-Poisson mixture.\\
+  How to visualize a Tweedie random variable:
+  \begin{itemize}
+    \item Draw $N \sim \text{Poisson}(\lambda)$
+    \item Now make $N$ iid draws: $V_{\ell} \sim \text{Gamma}(\alpha, \beta)$
+    \item $Y = \sum\limits_{\ell=1}^N  V_{\ell}$
+  \end{itemize}

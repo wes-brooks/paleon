@@ -40,6 +40,9 @@ for (i in 1:n) {
 #Make the one-stage model
 #Set up the data, including mean composition within the first-order neighborhood:
 modeldata = list(indicator=ifelse(biomass.wi[,sp]>0, 1, 0), biomass=biomass.wi[,sp], logbiomass=log(biomass.wi[,sp]), composition=composition.wi[,sp], x=composition.wi[,'x'], y=composition.wi[,'y'])
+md = as.data.frame(modeldata)
+md$logbiomass[which(md$logbiomass==-Inf)] = NaN
+
 neighborhood.composition = vector()
 for (i in 1:n) {
     neighborhood.composition = c(neighborhood.composition, sum(modeldata$composition * neighborhood[i,]) / sum(neighborhood[i,]))
@@ -109,8 +112,10 @@ stage2.data$neighborhood.composition = neighborhood.composition[indx]
 stage1.gam = gam(indicator~s(neighborhood.composition, k=50) + s(x,y,k=100), data=stage1.data, family='binomial', gamma=1.4)
 stage2.gam = gam(biomass~s(neighborhood.composition, k=50) + s(x,y,k=100), data=stage2.data, family=Gamma(link='log'), gamma=1.4)
 
-sqrt(abs(resid(stage2.gam, type='deviance'))) -> a2
-predict(stage2.gam, type='link') -> b2
+sqrt(abs(resid(stage2.gam, type='deviance'))) -> a3
+predict(stage2.gam, type='link') -> b3
+dev.new()
+scatter.smooth(b3,a3)
 
 
 
