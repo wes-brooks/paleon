@@ -9,6 +9,7 @@
 \usepackage{mathtools}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{multirow}
  
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -61,7 +62,7 @@
 
 %Title slide
 \begin{frame}
-\titlepage
+  \titlepage
 \end{frame}
 
 
@@ -98,20 +99,29 @@
 \end{frame}
 
 
-\subsection{Models}
+\section{Modeling biomass}
 
-
-%Model types
+%Modeling table
 \begin{frame}{Models}
   There are two divisions for modeling biomass data:
-  \begin{itemize}
-    \item One-stage vs. two-stage
-    \item Smoothing splines vs. GMRF
-   \end{itemize}
+  \begin{center}
+    \begin{tabular}{cc|r|c|c|c|}
+    & \multicolumn{2}{c}{} & \multicolumn{3}{c}{Estimation method}\\
+    & \multicolumn{2}{c}{} & \multicolumn{1}{c}{\rotatebox{60}{Splines}} & \multicolumn{1}{c}{\rotatebox{60}{GMRF}} & \multicolumn{1}{c}{\rotatebox{60}{GLM}}\\
+    \cline{3-6}
+    \multirow{3}{*}{\rotatebox{90}{Model}}  & \multirow{2}{*}{One-stage} & Zero-inflated gamma &  &  & \\
+    \cline{4-6}
+    & & Tweedie &  &  & \\
+    \cline{3-6}
+    & Two-stage & Bernoulli-Gamma & & & \\
+    \cline{3-6}
+    \end{tabular}
+   \end{center}
 \end{frame}
 
+\subsection{Models}
 
-  %Models
+  %Model types
 \begin{frame}[fragile]{Two-stage models}
   \begin{itemize}
     \item First stage: zero/non-zero
@@ -146,6 +156,18 @@
 \end{frame}
 
 
+\subsection{Fitting}
+
+\begin{frame}[fragile]{GLMs, Independent observations}
+  Based on composition fraction, ignoring spatial location
+\end{frame}
+
+\begin{frame}[fragile]{GMRF}
+\end{frame}
+
+\begin{frame}[fragile]{Splines}
+\end{frame}
+
 \section{Methodological details}
 \subsection{}
 
@@ -158,182 +180,10 @@
 
 \subsection{Branching process details}
 
+%Sources of randomness
+\begin{frame}{}
 
-%qPCR is a branching process
-\begin{frame}{qPCR as a branching process}
-Note:\\
-
-\begin{align*}
-  E[N_{n}] &= E[E(N_{n}|N_{n-1})] = E[(1+p)N_{n-1}] \\
-  &= \cdots = (1+p)^n \times E(N_0)
-\end{align*}
-\vspace{3mm}
-\begin{itemize}
-  \item So $W_n = \frac{N_n}{(1+p)^n}$ is a positive martingale
-  \vspace{3mm}
-  \item Thus, $W_n \to W$ almost surely for some $W$
-  \vspace{3mm}
-  \item $E[W] = m_a$
-\end{itemize}
 \end{frame}
-
-
-%qPCR as a branching process
-\begin{frame}{qPCR as a branching process}
-Consider an idealized reaction experiment:
-  \begin{itemize}
-    \item If we knew p and could let the number of reaction cycles $n \to \infty$:
-    \begin{itemize}
-    	\vspace{3mm}
-    	\item $W_i = \lim_{n \to \infty} \frac{N_{i,n}}{(1+p)^n} $
-	\vspace{2mm}
-	\item $W_1, W_2, \ldots, W_r \stackrel{\text{iid}}{\sim} W$
-	\vspace{4mm}
-	\item So $\frac{1}{r} \Sigma_{i=1}^r W_i \stackrel{\text{a.s.}}{\to} E[W] = m_a$
-    \end{itemize}
-    \item But p is unknown and we can only observe $\approx$ 15 reaction cycles, so we need some other estimator.
-  \end{itemize}
-\end{frame}
-
-
-%qPCR as a branching process
-\begin{frame}{Estimating p}
-  \begin{itemize}
-    \item Since $p$ is unknown, we estimate it with $\hat{p}$ via weighted least squares:
-\[
-\begin{pmatrix}
-N_n\\
-N_{n-1}\\
-\vdots\\
-N_1\\
-\end{pmatrix}
- - 
-\begin{pmatrix}
-N_{n-1}\\
-N_{n-2}\\
-\vdots\\
-N_0\\
-\end{pmatrix}
- = p \times
-\begin{pmatrix}
-N_{n-1}\\
-N_{n-2}\\
-\vdots\\
-N_0\\
-\end{pmatrix}
- + \epsilon
-\]
-\item Where $\epsilon_j \stackrel{\text{approx.}}{\sim} \text{Normal}(0, p(1-p) N_{j-1})$
-\vspace{2mm}
-\item With weights $W_j = (N_{j-1})^{-1}$ the resulting estimator is:
-\[
-\hat{p} = \frac{\Sigma_{i=1}^n (N_i - N_{i-1})}{\Sigma_{i=1}^n N_i}
-\]
-  \end{itemize}
-\end{frame}
-
-
-%qPCR as a branching process
-\begin{frame}{Making the most of a finite sample}
-Reminder: our idealized estimator was $W(n) = \frac{N_n}{(1+p)^n} $
-\vspace{3mm}
-  \begin{itemize}
-    \item $W$ uses only the final observation ($N_n$)
-    \vspace{3mm}
-    \item More efficient: use the sum $Y_n = \Sigma_{i=1}^n N_i$
-    \vspace{3mm}
-    \item By the Toeplitz Lemma, $\frac{Y_n}{(1+p)^n} \stackrel{\text{a.s.}}{\to} \frac{1+p}{p}W \Rightarrow \frac{pY_n}{(1+p)^{n+1}} \stackrel{\text{a.s.}}{\to} W$
-    \vspace{3mm}
-    \item Plug in $\hat{p}$ and the limit still holds.
-  \end{itemize}
-\end{frame}
-
-
-\subsection{Estimating gene copies from qPCR}
-
-
-%qPCR as a branching process
-\begin{frame}{Strategy for quantitation}
-  \begin{itemize}
-    \item Collect data on $r$ independent reactions
-    \vspace{3mm}
-    \item For reaction $i$ ($i=1, 2, \dots, r$), compute the statistic $M_i = \frac{\hat{p}_i Y_{n_i}}{(1+\hat{p}_i)^{n_i+1}}$
-    \vspace{3mm}
-    \item Average $M_1, M_2, \dots, M_r$ to get $\bar{M}$
-    \vspace{3mm}
-    \item $\sqrt{r}(\bar{M} - m_a) \stackrel{d}{\to} \text{Normal}(0,\sigma^2_L)$
-    \vspace{3mm}
-    \item Where $\sigma^2_L = \sigma^2_a + m_a E[\frac{1-p}{1+p}]$
-  \end{itemize}
-\end{frame}
-
-
-\subsection{Variance of the estimator}
-
-
-%qPCR as a branching process
-\begin{frame}{Variance of the estimator}
-\begin{align*}
-\sigma^2_L &= \text{var}[\frac{N_n}{(1+p)^n}] = E(\text{var}[\frac{N_n}{(1+p)^n}|p]) + \text{var}(E[\frac{N_n}{(1+p)^n}|p])\\
-&= E(\text{var}[\frac{N_n}{(1+p)^n}|p])  + \text{var}(m_a)\\
-&= E(\text{var}[\frac{N_n}{(1+p)^n}|p])
-\end{align*}
-\end{frame}
-
-
-%qPCR as a branching process
-\begin{frame}{Variance of the estimator}
-\begin{align*}
-\text{var}[\frac{N_n}{(1+p)^n}|p] &= \frac{1}{(1+p)^{2n}}\text{var}[N_n|p] \\
-&= \frac{1}{(1+p)^{2n}} ( E(\text{var}[N_n|N_{n-1},p]|p) + \text{var}(E[N_n|N_{n-1},p]|p) ) \\
-&= \frac{1}{(1+p)^{2n}} ( E[N_{n-1}p(1-p)|p] + \text{var}((1+p)N_{n-1}|p) ) \\
-&= \frac{1}{(1+p)^{2n}} ( m_a (1+p)^{n-1}p(1-p) + (1+p)^2\text{var}[N_{n-1}|p] ) \\
-&= \frac{m_a p (1-p)}{(1+p)^{n+1}}  + \frac{\text{var}[N_{n-1}|p]}{(1+p)^{2n-2}} \\
-&= \dots \\
-&= \frac{m_a p (1-p)}{(1+p)^{n+1}}  + \frac{m_a p (1-p)}{(1+p)^{n}} + \dots + \frac{m_a p (1-p)}{(1+p)^{2}} \\ &+ \frac{\text{var}[N_{0}|p]}{(1+p)^{2n-2n}} \\
-&= \frac{m_a p (1-p)}{(1+p)^{n+1}}  + \frac{m_a p (1-p)}{(1+p)^{n}} + \dots + \frac{m_a p (1-p)}{(1+p)^{2}} \\ 
-& + \frac{\text{var}[N_{0}|p]}{(1+p)^{2n-2n}} \\
-\end{align*}
-\end{frame}
-
-
-%qPCR as a branching process
-\begin{frame}{Variance of the estimator}
-\begin{align*}
-\text{var}[\frac{N_n}{(1+p)^n}|p] &= \frac{m_a p (1-p)}{(1+p)^{2}} \Sigma_{k=0}^{n-1}\frac{1}{(1+p)^k} + \sigma^2_a \\ 
-&\to m_a  \frac{1-p}{1+p} + \sigma^2_a \\
-\end{align*}
-So:
-\begin{align*}
-\text{var}[\frac{N_j}{(1+p)^n}] &= E(\text{var}[\frac{N_n}{(1+p)^n}|p])\\
-&\to E(m_a \frac{1-p}{1+p} + \sigma^2_a) \\
-&= m_a E(\frac{1-p}{1+p}) + \sigma^2_a = \sigma^2_L
-\end{align*}
-\end{frame}
-
-
-\section{Analysis of experimental data}
-\subsection{Luteinizing hormone}
-
-
-%Description of experimental data (luteinizing hormone)
-\begin{frame}{Experimental data - luteinizing hormone} 
-\begin{itemize}
-  \item The goal with the experimental data was \emph{relative} quantitation
-  \begin{itemize}
-    \item Estimate ratio of gene expression between conditions C and T
-  \end{itemize}
-  \item The sample was divided into two parts
-  \item One part was diluted to one-third the original concentration
-  \item Sixteen reactions were run under each condition (diluted, normal)
-\end{itemize}
-\end{frame} 
-
-
-%results of experiment (luteinizing hormone)
-\begin{frame}{Experimental data - luteinizing hormone} 
-
-\end{frame} 
 
 
 \end{document}
