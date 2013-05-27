@@ -9,6 +9,7 @@
 \usepackage{mathtools}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{multirow}
  
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -61,7 +62,7 @@
 
 %Title slide
 \begin{frame}
-\titlepage
+  \titlepage
 \end{frame}
 
 
@@ -98,32 +99,27 @@
 \end{frame}
 
 
-\subsection{Models}
-
 %Modeling table
-\begin{frame}{}
-\begin{center}
-  \begin{tabular}{rccc}
-  & one-stage & two-stage & zero-inflated \\
-  independent & a & b & c \\
-  gam & d & e & f \\
-  inla & g & h & i
-  \end{tabular}
-\end{center}
-\end{frame}
-
-
-%Model types
 \begin{frame}{Models}
   There are two divisions for modeling biomass data:
-  \begin{itemize}
-    \item One-stage vs. two-stage
-    \item Smoothing splines vs. GMRF
-   \end{itemize}
+  \begin{center}
+    \begin{tabular}{cc|r|c|c|c|}
+    & \multicolumn{2}{c}{} & \multicolumn{3}{c}{Estimation method}\\
+    & \multicolumn{2}{c}{} & \multicolumn{1}{c}{\rotatebox{60}{Splines}} & \multicolumn{1}{c}{\rotatebox{60}{GMRF}} & \multicolumn{1}{c}{\rotatebox{60}{GLM}}\\
+    \cline{3-6}
+    \multirow{3}{*}{\rotatebox{90}{Model}}  & \multirow{2}{*}{One-stage} & Zero-inflated gamma &  &  & \\
+    \cline{4-6}
+    & & Tweedie &  &  & \\
+    \cline{3-6}
+    & Two-stage & Bernoulli-Gamma & & & \\
+    \cline{3-6}
+    \end{tabular}
+   \end{center}
 \end{frame}
 
+\subsection{Models}
 
-  %Models
+  %Model types
 \begin{frame}[fragile]{Two-stage models}
   \begin{itemize}
     \item First stage: zero/non-zero
@@ -176,7 +172,6 @@
 
 \section{Methodological details}
 \subsection{}
-
 
 
 

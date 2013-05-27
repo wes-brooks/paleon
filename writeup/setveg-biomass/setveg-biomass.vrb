@@ -1,5 +1,5 @@
 \frametitle{Tweedie model}
-The Tweedie model is a Gamma-Poisson mixture.\\
+With $\theta$ given, the Tweedie distribution is in the exponential family with natural parameter $\nu$:\\
   \begin{itemize}
     \item $f(y) = \exp\left\{ \phi^{-1} \left[ y \nu - \kappa(\nu)\right] + c(y,\phi,\nu) \right\}$
     \item $\phi$ is a scale parameter

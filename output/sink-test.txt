@@ -1,0 +1,16 @@
+
+Call:
+lm(formula = a2 ~ b2)
+
+Coefficients:
+(Intercept)           b2  
+    2.58071      0.00546  
+
+
+Call:
+lm(formula = a2 ~ b2)
+
+Coefficients:
+(Intercept)           b2  
+    2.58071      0.00546  
+
