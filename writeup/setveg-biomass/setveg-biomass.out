@@ -1,4 +1,11 @@
 \BOOKMARK [2][]{Outline0.1}{Data}{}% 1
-\BOOKMARK [3][]{Outline0.1.1.5}{Overview\040of\040the\040data}{Outline0.1}% 2
-\BOOKMARK [3][]{Outline0.1.2.8}{Models}{Outline0.1}% 3
-\BOOKMARK [2][]{Outline0.2}{Methodological\040details}{}% 4
+\BOOKMARK [2][]{Outline0.2}{Modeling}{}% 2
+\BOOKMARK [2][]{Outline0.3}{Model\040structure}{}% 3
+\BOOKMARK [3][]{Outline0.3.1.14}{Two-stage}{Outline0.3}% 4
+\BOOKMARK [3][]{Outline0.3.2.15}{One-stage}{Outline0.3}% 5
+\BOOKMARK [2][]{Outline0.4}{Spatial\040fitting}{}% 6
+\BOOKMARK [3][]{Outline0.4.1.19}{Independent\040grid\040cells}{Outline0.4}% 7
+\BOOKMARK [3][]{Outline0.4.2.21}{Spline\040models}{Outline0.4}% 8
+\BOOKMARK [3][]{Outline0.4.3.22}{Bayesian\040hierarchical\040model}{Outline0.4}% 9
+\BOOKMARK [2][]{Outline0.5}{Methodological\040details}{}% 10
+\BOOKMARK [2][]{Outline0.6}{Other}{}% 11

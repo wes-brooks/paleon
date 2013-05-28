@@ -1,8 +1,7 @@
-\frametitle{Tweedie model}
-With $\theta$ given, the Tweedie distribution is in the exponential family with natural parameter $\nu$:\\
+\verb!COZIGAM!: an alternative for fitting the two-stage model
   \begin{itemize}
-    \item $f(y) = \exp\left\{ \phi^{-1} \left[ y \nu - \kappa(\nu)\right] + c(y,\phi,\nu) \right\}$
-    \item $\phi$ is a scale parameter
-    \item $\nu = \mu^{1-\theta} / \left(1-\theta\right)$
-    \item $\kappa \left(\nu\right) = \left[(1-\theta)\nu\right]^{\left(2-\theta\right) / \left(1-\theta\right)} / \left(2-\theta\right) = \mu^{2-\theta} / \left(2-\theta\right)$
+    \item COZIGAM stands for constrained zero-inflated GAM
+    \item ``Constrained" means that the latent predictors for the $P(y=0)$ part and the $f(y|y>0)$ part must be proportional
+    \item Package was removed from CRAN last year
+    \item In testing with the archived version, algorithm convergence was elusive
   \end{itemize}

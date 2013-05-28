@@ -1,5 +1,12 @@
 \beamer@endinputifotherversion {3.26pt}
 \beamer@sectionintoc {1}{Data}{4}{0}{1}
-\beamer@subsectionintoc {1}{1}{Overview of the data}{5}{0}{1}
-\beamer@subsectionintoc {1}{2}{Models}{8}{0}{1}
-\beamer@sectionintoc {2}{Methodological details}{12}{0}{2}
+\beamer@sectionintoc {2}{Modeling}{9}{0}{2}
+\beamer@sectionintoc {3}{Model structure}{13}{0}{3}
+\beamer@subsectionintoc {3}{1}{Two-stage}{14}{0}{3}
+\beamer@subsectionintoc {3}{2}{One-stage}{15}{0}{3}
+\beamer@sectionintoc {4}{Spatial fitting}{18}{0}{4}
+\beamer@subsectionintoc {4}{1}{Independent grid cells}{19}{0}{4}
+\beamer@subsectionintoc {4}{2}{Spline models}{21}{0}{4}
+\beamer@subsectionintoc {4}{3}{Bayesian hierarchical model}{22}{0}{4}
+\beamer@sectionintoc {5}{Methodological details}{25}{0}{5}
+\beamer@sectionintoc {6}{Other}{27}{0}{6}
