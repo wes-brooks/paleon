@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  28 MAY 2013 01:43
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  28 MAY 2013 01:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -867,7 +867,7 @@ Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 (/usr/local/texlive/2012/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2004/09/05 1.3 listings language file
 )
-No file setveg-biomass.aux.
+(./setveg-biomass.aux)
 \openout1 = `setveg-biomass.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 65.
@@ -886,6 +886,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 65.
 LaTeX Font Info:    ... okay on input line 65.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 65.
 LaTeX Font Info:    ... okay on input line 65.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -935,12 +936,10 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 65.
 LaTeX Info: Redefining \pageref on input line 65.
 LaTeX Info: Redefining \nameref on input line 65.
+
+(./setveg-biomass.out) (./setveg-biomass.out)
 \@outlinefile=\write5
 \openout5 = `setveg-biomass.out'.
-
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 65.
@@ -1019,19 +1018,16 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
 
 [1
 
-]
-No file setveg-biomass.toc.
-[2
+] (./setveg-biomass.toc) [2
 
 ] [3
 
-]
-No file setveg-biomass.toc.
-[4
+] (./setveg-biomass.toc) [4
 
 ]
 LaTeX Font Info:    Try loading font information for U+msa on input line 108.
- (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 108.
@@ -1060,8 +1056,7 @@ File: ../../figures/raw/Maple-biomass-v-composition.pdf Graphic file (type QTm)
 <use  "../../figures/raw/Maple-biomass-v-composition.pdf" > [8
 
 ]
-No file setveg-biomass.toc.
-[9
+(./setveg-biomass.toc) [9
 
 ]
 Overfull \vbox (5.38054pt too high) detected at line 148
@@ -1073,9 +1068,7 @@ Overfull \vbox (5.38054pt too high) detected at line 148
 
 ] [12
 
-]
-No file setveg-biomass.toc.
-[13
+] (./setveg-biomass.toc) [13
 
 ]
 \openout4 = `setveg-biomass.vrb'.
@@ -1085,71 +1078,78 @@ No file setveg-biomass.toc.
 ]
 \openout4 = `setveg-biomass.vrb'.
 
- (./setveg-biomass.vrb
-File: ../../figures/tweedie-sim.pdf Graphic file (type QTm)
 
-<use  "../../figures/tweedie-sim.pdf" >) [15
+(./setveg-biomass.vrb
+File: ../../figures/tweedie-sim.pdf Graphic file (type QTm)
+ <use  "../../figures/tweedie-sim.pdf" >) [15
 
 ] [16
 
 ]
 \openout4 = `setveg-biomass.vrb'.
 
- (./setveg-biomass.vrb)
-[17
 
-]
-No file setveg-biomass.toc.
-[18
+(./setveg-biomass.vrb) [17
+
+] (./setveg-biomass.toc) [18
+
+] [19
 
 ]
 File: ../../figures/aspatial-tweedie/Maple-plots.pdf Graphic file (type QTm)
- <use  "../../figures/aspatial-tweedie/Maple-plots.pdf" >
-Overfull \vbox (8.01079pt too high) detected at line 260
- []
 
-[19
+<use  "../../figures/aspatial-tweedie/Maple-plots.pdf" > [20
 
 ]
 File: ../../figures/aspatial-tweedie/Oaks-plots.pdf Graphic file (type QTm)
- <use  "../../figures/aspatial-tweedie/Oaks-plots.pdf" > [20
 
-] [21
+<use  "../../figures/aspatial-tweedie/Oaks-plots.pdf" > [21
 
 ] [22
 
 ]
+File: ../../figures/spline-tweedie/Maple-residuals-heatmap.pdf Graphic file (ty
+pe QTm)
+
+<use  "../../figures/spline-tweedie/Maple-residuals-heatmap.pdf" > [23
+
+]
+File: ../../figures/spline-tweedie/Oaks-residuals-heatmap.pdf Graphic file (typ
+e QTm)
+
+<use  "../../figures/spline-tweedie/Oaks-residuals-heatmap.pdf" > [24
+
+] [25
+
+]
 
 LaTeX Font Warning: Font shape `OT1/cmss/bx/it' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 295.
+(Font)              using `OT1/cmss/bx/n' instead on input line 322.
 
 File: ../../figures/neighborhood.png Graphic file (type QTm)
-<use  "../../figures/neighborhood.png" > [23
+<use  "../../figures/neighborhood.png" > [26
 
 ]
 File: ../../figures/inla-delta/maple-fitted-heatmap.pdf Graphic file (type QTm)
 
 
-<use  "../../figures/inla-delta/maple-fitted-heatmap.pdf" > [24
+<use  "../../figures/inla-delta/maple-fitted-heatmap.pdf" > [27
 
 ]
-No file setveg-biomass.toc.
-[25
+(./setveg-biomass.toc) [28
 
 ]
-Overfull \vbox (5.38054pt too high) detected at line 320
+Overfull \vbox (5.38054pt too high) detected at line 347
  []
 
-[26
+[29
 
-]
-No file setveg-biomass.toc.
-[27
+] (./setveg-biomass.toc) [30
 
 ]
 \openout4 = `setveg-biomass.vrb'.
 
- (./setveg-biomass.vrb) [28
+ (./setveg-biomass.vrb) [31
 
 ]
 \tf@nav=\write6
@@ -1161,11 +1161,12 @@ No file setveg-biomass.toc.
 \tf@snm=\write8
 \openout8 = `setveg-biomass.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 334.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 334.
- (./setveg-biomass.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 334.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 334.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 361.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 361.
+
+(./setveg-biomass.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 361.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 361.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1174,15 +1175,15 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 334.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 361.
  ) 
 Here is how much of TeX's memory you used:
- 21877 strings out of 493994
- 385669 string characters out of 3150335
- 473087 words of memory out of 3000000
- 24677 multiletter control sequences out of 15000+200000
+ 21978 strings out of 493994
+ 388692 string characters out of 3150335
+ 475087 words of memory out of 3000000
+ 24755 multiletter control sequences out of 15000+200000
  21247 words of font info for 76 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 50i,16n,57p,422b,594s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 50i,16n,65p,422b,641s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on setveg-biomass.pdf (28 pages).
+Output written on setveg-biomass.pdf (31 pages).
