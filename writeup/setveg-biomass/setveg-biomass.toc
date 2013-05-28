@@ -8,5 +8,4 @@
 \beamer@subsectionintoc {4}{1}{Independent grid cells}{19}{0}{4}
 \beamer@subsectionintoc {4}{2}{Spline models}{22}{0}{4}
 \beamer@subsectionintoc {4}{3}{Bayesian hierarchical model}{25}{0}{4}
-\beamer@sectionintoc {5}{Methodological details}{28}{0}{5}
-\beamer@sectionintoc {6}{Other}{30}{0}{6}
+\beamer@sectionintoc {5}{Recap}{28}{0}{5}

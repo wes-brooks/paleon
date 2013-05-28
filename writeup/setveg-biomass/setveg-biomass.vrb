@@ -1,7 +1,17 @@
-\verb!COZIGAM!: an alternative for fitting the two-stage model
+\frametitle{Tweedie model}
+With $\theta$ given, the Tweedie distribution is in the exponential family.\\
   \begin{itemize}
-    \item COZIGAM stands for constrained zero-inflated GAM
-    \item ``Constrained" means that the latent predictors for the $P(y=0)$ part and the $f(y|y>0)$ part must be proportional
-    \item Package was removed from CRAN last year
-    \item In testing with the archived version, algorithm convergence was elusive
+    \item $EY = \mu$
+    \item var$(Y) = \phi \mu^\theta$
+    \item $\phi$ is a scale parameter
+    \item $P(Y=0) = \exp{\left(-\phi^{-1} \frac{\mu^{2-\theta}}{2-\theta}\right)}$
+    \begin{itemize}
+      \item $P(Y=0) \uparrow$ as $\mu \rightarrow 0$ (as latent predictor $\eta \rightarrow -\infty$)
+      \item $P(Y=0) \uparrow$ as $\phi \uparrow$
+      \item $P(Y=0) \uparrow$ as $\theta \rightarrow 1$
+    \end{itemize}
+    \item But we first need $\theta$
+    \begin{itemize}
+      \item Find $\hat{\theta}$ so that the model's deviance residuals match the assumed variance function.
+    \end{itemize}
   \end{itemize}

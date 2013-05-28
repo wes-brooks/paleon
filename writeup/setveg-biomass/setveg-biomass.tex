@@ -230,7 +230,7 @@
     \item $\phi$ is a scale parameter
     \item $P(Y=0) = \exp{\left(-\phi^{-1} \frac{\mu^{2-\theta}}{2-\theta}\right)}$
     \begin{itemize}
-      \item $P(Y=0) \uparrow$ as $\mu \rightarrow -\infty$
+      \item $P(Y=0) \uparrow$ as $\mu \rightarrow 0$ (as latent predictor $\eta \rightarrow -\infty$)
       \item $P(Y=0) \uparrow$ as $\phi \uparrow$
       \item $P(Y=0) \uparrow$ as $\theta \rightarrow 1$
     \end{itemize}
@@ -291,12 +291,14 @@
   \end{center}
 \end{frame}
 
-\begin{frame}{Independent grid cells}
+\begin{frame}{Spline models - Oak}
  Pictures here are from a one-stage spline model for Oak.\\
   \begin{center}
     \includegraphics[width=0.9\textwidth]{../../figures/spline-tweedie/Oaks-residuals-heatmap.pdf}
   \end{center}
 \end{frame}
+
+
 
 \subsection{Bayesian hierarchical model}
 
@@ -329,7 +331,7 @@ Consider a log-normal model where the mean is a Gaussian Process:
 \end{frame}
 
 
-\section{Methodological details}
+\section{Recap}
 
 %Modeling matrix
 \begin{frame}{Modeling grid}
@@ -346,7 +348,6 @@ Consider a log-normal model where the mean is a Gaussian Process:
   \end{center}
 \end{frame}
 
-\section{Other}
 
 \begin{frame}[fragile]
   \verb!COZIGAM!: an alternative for fitting the two-stage model
