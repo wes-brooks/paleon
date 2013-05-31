@@ -1050,4 +1050,85 @@ File: ../../figures/raw/Maple-observed-heatmap.pdf Graphic file (type QTm)
 File: ../../figures/raw/Oaks-biomass-v-composition.pdf Graphic file (type QTm)
 
 <use  "../../figures/raw/Oaks-biomass-v-composition.pdf" >
-File: ../../figures/raw/Maple-biomass-v-c
+File: ../../figures/raw/Maple-biomass-v-composition.pdf Graphic file (type QTm)
+
+
+<use  "../../figures/raw/Maple-biomass-v-composition.pdf" > [8
+
+]
+(./setveg-biomass.toc) [9
+
+]
+Overfull \vbox (5.38054pt too high) detected at line 148
+ []
+
+[10
+
+] [11
+
+] [12
+
+] (./setveg-biomass.toc) [13
+
+]
+\openout4 = `setveg-biomass.vrb'.
+
+ (./setveg-biomass.vrb) [14
+
+]
+\openout4 = `setveg-biomass.vrb'.
+
+
+(./setveg-biomass.vrb
+File: ../../figures/tweedie-sim.pdf Graphic file (type QTm)
+ <use  "../../figures/tweedie-sim.pdf" >) [15
+
+] [16
+
+]
+\openout4 = `setveg-biomass.vrb'.
+
+
+(./setveg-biomass.vrb) [17
+
+] (./setveg-biomass.toc) [18
+
+] [19
+
+]
+File: ../../figures/aspatial-tweedie/Maple-plots.pdf Graphic file (type QTm)
+
+<use  "../../figures/aspatial-tweedie/Maple-plots.pdf" > [20
+
+]
+File: ../../figures/aspatial-tweedie/Oaks-plots.pdf Graphic file (type QTm)
+
+<use  "../../figures/aspatial-tweedie/Oaks-plots.pdf" > [21
+
+] [22
+
+]
+./setveg-biomass.tex:292: Unable to load picture or PDF file '../../figures/spl
+ine-tweedie/Maple-residuals-heatmap.pdf'.
+<to be read again> 
+                   }
+l.292 \end{frame}
+                 
+? 
+./setveg-biomass.tex:292: Emergency stop.
+<to be read again> 
+                   }
+l.292 \end{frame}
+                 
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 21954 strings out of 493994
+ 388149 string characters out of 3150335
+ 474088 words of memory out of 3000000
+ 24746 multiletter control sequences out of 15000+200000
+ 20491 words of font info for 73 fonts, out of 3000000 for 9000
+ 1144 hyphenation exceptions out of 8191
+ 50i,16n,65p,422b,641s stack positions out of 5000i,500n,10000p,200000b,50000s
+Output written on setveg-biomass.pdf (22 pages).
