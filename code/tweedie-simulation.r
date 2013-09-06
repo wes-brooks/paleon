@@ -21,7 +21,7 @@ p.f = function(p) {
     
     a = abs(resid(m, type='deviance'))
     b = predict(m, type='response')
-    
+    scatter.smooth(b,a)
     m2 = lm(a~b)
     return(coef(m2)[2]**2)
 }

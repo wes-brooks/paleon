@@ -1,0 +1,1269 @@
+names(model[['model']][['models']])
+str(model[['model']][['models']])
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+?Matrix
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+?predict.lars
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+Put the county names into a form that can be matched.#
+county = map_data('county')#
+#state = map_data('state')#
+#
+plot.gwselect(model, var="pex", polygons=county)
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+Put the county names into a form that can be matched.#
+county = map_data('county')#
+#state = map_data('state')#
+#
+plot.gwselect(model, var="pex", polygons=county)
+plot.gwselect(model, var="pfire", polygons=county)
+predict(model[['model']][['models']][[3]], type='coefficients', s=s.optimal, mode='lambda')[['coefficients']]
+predict(model[['model']][['models']][[3]][['model']], type='coefficients', s=s.optimal, mode='lambda')[['coefficients']]
+predict(model[['model']][['models']][[3]][['model']], type='coefficients', s=model[['model']][['models']][[3]][['s.optimal']], mode='lambda')[['coefficients']]
+predict(model[['model']][['models']][[3]][['model']], type='coefficients', s=model[['model']][['models']][[3]][['s.optimal']], mode='lambda')
+predict(model[['model']][['models']][[3]][['model']], type='coefficients', s=model[['model']][['models']][[100]][['s.optimal']], mode='lambda')
+model[['model']][['models']][[100]][['s.optimal']]
+model[['model']][['models']][[100]]
+names(model[['model']][['models']][[100]])
+names(model[['model']][['models']][[100]][['s']])
+model[['model']][['models']][[100]][['s']]
+model[['model']][['models']][[1]][['s']]
+model[['model']][['models']][[2]][['s']]
+model[['model']][['models']][[5]][['s']]
+predict(model[['model']][['models']][[3]][['model']], type='coefficients', s=model[['model']][['models']][[100]][['s']], mode='lambda')
+model[['model']][['models']][[3]][['model']]
+sumary(model[['model']][['models']][[3]][['model']])
+summary(model[['model']][['models']][[3]][['model']])
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+county = map_data('county')#
+#state = map_data('state')#
+#
+plot.gwselect(model, var="pex", polygons=county)
+model[['model']][['models']][[3]][['model']]
+predict(model[['model']][['models']][[3]][['model']], type='coefficients', s=model[['model']][['models']][[100]][['s']], mode='lambda')
+summary(model[['model']][['models']][[3]][['model']])
+model[['model']][['models']][[3]][['model']]
+?predict.lars
+predict(model[['model']][['models']][[3]][['model']], type='fit', s=model[['model']][['models']][[100]][['s']], mode='lambda', newx=matrix(0,1,10))
+library(gwselect)#
+registerCores(n=7)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]#
+#
+#Define which variables we'll use as predictors of poverty:#
+#weights=rep(1, nrow(pov2))#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))#
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)#
+bw.pov = 0.9310163#
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+county = map_data('county')#
+#state = map_data('state')#
+#
+plot.gwselect(model, var="pwhite", polygons=county)
+county = map_data('county')#
+#state = map_data('state')#
+#
+plot.gwselect(model, var="pwh", polygons=county)
+library(GeoR)
+library(geoR)
+install.packages("geoR")
+library(geoR)
+?grf
+library(gwselect)#
+library(MASS)#
+registerCores(n=7)#
+#
+size = c(20, 30, 40, 50)#
+size = c(40)#
+#
+for (N in size) {#
+    coord = seq(0, 1, length.out=N)#
+    grid = matrix(rnorm(N**2, mean=rep(ifelse(coord<=0.5, 0, 2), N), sd=0.5), N, N)#
+    rownames(grid) = seq(0, 1, length.out=N)#
+    colnames(grid) = seq(0, 1, length.out=N)#
+}#
+#
+#population for weights#
+pop = rpois(N**2, 400)#
+#
+##
+d1 = mvrnorm(n=N**2, mu=c(0,0), Sigma=matrix(c(1,0.2,0.2,1),2,2))#
+d2 = mvrnorm(n=N**2, mu=c(0,0), Sigma=matrix(c(1,0.2,0.2,1),2,2))#
+#
+x1 = d1[,1]#
+X1 = matrix(x1, N, N)#
+B1 = matrix(rep(ifelse(coord<=0.5, 0, 2), N), N, N)#
+#
+x2 = d2[,1]#
+X2 = matrix(x2, N, N)#
+B2 = matrix(rep(1-coord, N), N, N)#
+#
+#Correlated with X1:#
+x3 = d1[,2]#
+X3 = matrix(x3, N, N)#
+#
+#Correlated with X2#
+x4 = d2[,2]#
+X4 = matrix(x4, N, N)#
+#
+eta = X1*B1 + X2*B2 + rnorm(N**2, 0, 0.1)#
+Z = rnorm(N**2, 0, 1)#
+#p = exp(eta) / (1+exp(eta))#
+Y = rnorm(N**2, eta, 1)#
+#
+##
+loc.x = rep(seq(0, 1, length.out=N), each=N)#
+loc.y = rep(seq(0, 1, length.out=N), times=N)#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), Z, loc.x, loc.y)#
+#
+#weights = pop#
+#bw = gwglmnet.sel(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='binomial', parallel=TRUE, longlat=FALSE, adapt=TRUE, precondition=FALSE)#
+#model = gwglmnet(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], bw=bw, weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='binomial', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)#
+#
+bw = gwlars.sel(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', parallel=TRUE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+data(iris)
+dim(iris)
+i2 = iris[,-5]
+names(i2)
+m1 = lm(Sepal.Width~., data=i2)
+m2 = lm(Sepal.Width~., data=i2, weights=runif(150))
+AIC(m1)
+AIC(m2)
+BIC(m2)
+BIC(m1)
+summary(m1)
+summary(m2)
+xx = iris[,c(1,3,4)]
+yy = iris[,2]
+m3 = lsfit(x=xx, y=yy, weights=runif(150))
+>lsfit
+?lsfit
+m3 = lsfit(x=xx, y=yy, wt=runif(150))
+aic(m3)
+AIC(m3)
+m3
+?lm
+?apply
+lm.wfit
+lm
+install.packages("sp")
+install.packages("maps")
+install.packages("shapefiles")
+install.packages("plotrix")
+install.packages("fossil")
+install.packages("ggplot2")
+install.packages("RandomFields")
+install.packages("scales")
+install.packages("foreach")
+install.packages("iterators")
+install.packages("multicore")
+install.packages("doMC")
+install.packages("lars")
+install.packages("glmnet")
+install.packages("splancs")
+install.packages("geoR")
+install.packages("dichromat")
+install.packages("colorspace")
+install.packages("gtable")
+install.packages("labeling")
+install.packages("memoise")
+install.packages("multicore")
+install.packages("munsell")
+install.packages("plyr")
+install.packages("proto")
+install.packages("RColorBrewer")
+install.packages("reshape2")
+library(sp)
+library(gwselect)
+install.packages("colorspace")
+install.packages("dichromat")
+install.packages("digest")
+install.packages("doMC")
+library(fossil)
+earth.dist
+deg.dist
+getwd()
+a = data.table(matrix(1:20,5,2))
+a = as.data.table(matrix(1:20,5,2))
+a = data.frame(matrix(1:20,5,2))
+a
+write.table(a, "test.out")
+library(INLA)
+?f
+?inla.models
+library(INLA)
+?f
+?inla
+library(INLA)
+?inla
+n=1000#
+i=1:n#
+j = i#
+z = rnorm(n)#
+w = runif(n)#
+y = z  + 2*z*w + rnorm(n)#
+formula = y ~ f(i, model="iid",initial=0, fixed=T)
+r = inla(formula, data = data.frame(i,j,w,y))
+summary(r)
+hist(y)
+mean(y)
+formula = y ~ f(i, model="iid",initial=0, fixed=T) +#
+              f(j, w, copy="i", fixed=FALSE)#
+r = inla(formula, data = data.frame(i,j,w,y))
+summary(r)
+mean(w)
+*2+1
+mean(w)*2
+x = rnorm(n0)
+x = rnorm(n)
+b=3
+y = b*x + rnorm(n)
+f = y~f(x, model='iid')
+inla(f, data=data.frame(x,y))
+inla(f, data=data.frame(x,y)) ->m
+summary(m)
+i
+f = y~f(x, model='linear')
+inla(f, data=data.frame(x,y)) ->m
+summary(m)
+b
+?order
+library(INLA)
+?inla
+?predict.inla
+?residuals.inla
+?save
+install.packages("gridSVG")
+q()
+library(nlme);set.seed(1);n <- 200#
+dat <- gamSim(2,n=n,scale=0) ## standard example
+library(mgcv)
+library(nlme);set.seed(1);n <- 200#
+dat <- gamSim(2,n=n,scale=0) ## standard example
+dat
+plot(data)
+data
+plot(dat$data)
+?corGaus
+library(mgcv)
+update.packages("mgcv")
+reload(mgcv)
+library(mgcv)
+update.packages('mgcv')
+install.packages('mgcv')
+library(mgcv)
+library(mgcv)#
+n<-200#
+sig <- 2#
+dat <- gamSim(1,n=n,scale=sig)#
+b<-gam(y~s(x0)+s(I(x1^2))+s(x2)+offset(x3),data=dat)#
+newd <- data.frame(x0=(0:30)/30,x1=(0:30)/30,x2=(0:30)/30,x3=(0:30)/30)#
+pred <- predict.gam(b,newd)#
+##############################################
+## difference between "terms" and "iterms"#
+##############################################
+nd2 <- data.frame(x0=c(.25,.5),x1=c(.25,.5),x2=c(.25,.5),x3=c(.25,.5))#
+predict(b,nd2,type="terms",se=TRUE)#
+predict(b,nd2,type="iterms",se=TRUE)#
+##########################################################
+## now get variance of sum of predictions using lpmatrix#
+##########################################################
+Xp <- predict(b,newd,type="lpmatrix")
+Xp
+?corGaus
+library(nlme)
+?corGaus
+library(geoR)#
+library(gwselect)#
+library(doMC)#
+registerCores(n=3)#
+#
+seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])#
+B = 100#
+N = 30#
+coord = seq(0, 1, length.out=N)#
+#
+#Establish the simulation parameters#
+#settings = 12#
+#tau = rep(0, settings)#
+#rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)#
+#sigma.tau = rep(0, settings)#
+#sigma = rep(c(0.5,1), settings/2)#
+#
+#Establish the simulation parameters#
+settings = 12#
+tau = rep(0, settings)#
+rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)#
+sigma.tau = rep(0, settings)#
+sigma = rep(c(0.5,1), settings/2)#
+#
+params = data.frame(tau, rho, sigma.tau, sigma)#
+#
+#Read command-line parameters#
+args = commandArgs(trailingOnly=TRUE)#
+#cluster = as.integer(args[1])#
+#process = as.integer(args[2])#
+cluster=NA#
+process=10#
+#
+#Simulation parameters are based on the value of process#
+setting = process %/% B + 1#
+parameters = params[setting,]#
+set.seed(seeds[process+1])#
+#
+#Generate the covariates:#
+if (parameters[['tau']] > 0) {#
+    d1 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d2 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d3 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d4 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d5 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+} else {#
+    d1 = rnorm(N**2, mean=0, sd=1)#
+    d2 = rnorm(N**2, mean=0, sd=1)#
+    d3 = rnorm(N**2, mean=0, sd=1)#
+    d4 = rnorm(N**2, mean=0, sd=1)#
+    d5 = rnorm(N**2, mean=0, sd=1)#
+}#
+#
+loc.x = rep(coord, times=N)#
+loc.y = rep(coord, each=N)#
+#
+#Use the Cholesky decomposition to correlate the random fields:#
+S = matrix(parameters[['rho']], 5, 5)#
+diag(S) = rep(1, 5)#
+L = chol(S)#
+#
+#Force correlation on the Gaussian random fields:#
+D = as.matrix(cbind(d1, d2, d3, d4, d5)) %*% L#
+##
+X1 = matrix(D[,1], N, N)#
+X2 = matrix(D[,2], N, N)#
+X3 = matrix(D[,3], N, N)#
+X4 = matrix(D[,4], N, N)#
+X5 = matrix(D[,5], N, N)#
+#
+if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=parameters[['sigma']])}#
+if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data}#
+if ((setting-1) %/% 2 == 0) {#
+    B1 = 4.5*matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)#
+}
+B1
+X1
+parameters[['sigma']]
+parameters[['sigma']] = 5
+parameters[['sigma']] = 25
+parameters[['sigma']] = 5
+grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data -> Y
+var(Y)
+sapply(1:900, function(j) { %*% chol(matrix(c(1,B1[j],B1[j],25)),2,2) } )
+B1[1]
+B1[2]
+B1[950]
+B1[850]
+B1[435]
+B1
+B1[899]
+B1[900]
+parameters[['sigma']] = 1
+grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data -> Y
+sapply(1:900, function(j) {A = matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25)),2,2); X[j]=A[1]; Y[j]=A[2] } )
+sapply(1:900, function(j) {A = matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)); X[j]=A[1]; Y[j]=A[2] } )
+sapply(1:900, function(j) {A = matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)); X1[j]=A[1]; Y[j]=A[2] } )
+X1
+var(X1)
+as.vector(X1)
+var(as.vector(X1))
+var(as.vector(Y))
+sapply(1:900, function(j) {A = matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)); X1[j]=A[1]; Y[j]=A[2] } )
+sapply(1:900, function(j) {matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)) } )
+sapply(1:900, function(j) {matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)) } ) -> A
+a
+A
+var(A[1,])
+var(A[2,])
+plot(t(A))
+Y = matrix(A[2,],30,30)
+wireframe(Y)
+X1 = matrix(A[1,],30,30)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)#
+fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))#
+#
+vars = cbind(B1=as.vector(B1!=0))#, B2=as.vector(B2!=0), B3=as.vector(B3!=0))#
+oracle = list()#
+for (i in 1:N**2) { #
+    oracle[[i]] = character(0)#
+    if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }#
+}
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+Y
+sim
+plot(sim)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+Establish the simulation parameters#
+settings = 12#
+tau = rep(0, settings)#
+rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)#
+sigma.tau = rep(0, settings)#
+sigma = rep(c(0.5,1), settings/2)#
+#
+params = data.frame(tau, rho, sigma.tau, sigma)#
+#
+#Read command-line parameters#
+args = commandArgs(trailingOnly=TRUE)#
+#cluster = as.integer(args[1])#
+#process = as.integer(args[2])#
+cluster=NA#
+process=10#
+#
+#Simulation parameters are based on the value of process#
+setting = process %/% B + 1#
+parameters = params[setting,]#
+set.seed(seeds[process+1])#
+#
+#Generate the covariates:#
+if (parameters[['tau']] > 0) {#
+    d1 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d2 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d3 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d4 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d5 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+} else {#
+    d1 = rnorm(N**2, mean=0, sd=1)#
+    d2 = rnorm(N**2, mean=0, sd=1)#
+    d3 = rnorm(N**2, mean=0, sd=1)#
+    d4 = rnorm(N**2, mean=0, sd=1)#
+    d5 = rnorm(N**2, mean=0, sd=1)#
+}#
+#
+loc.x = rep(coord, times=N)#
+loc.y = rep(coord, each=N)#
+#
+#Use the Cholesky decomposition to correlate the random fields:#
+S = matrix(parameters[['rho']], 5, 5)#
+diag(S) = rep(1, 5)#
+L = chol(S)#
+#
+#Force correlation on the Gaussian random fields:#
+D = as.matrix(cbind(d1, d2, d3, d4, d5)) %*% L#
+##
+X1 = matrix(D[,1], N, N)#
+X2 = matrix(D[,2], N, N)#
+X3 = matrix(D[,3], N, N)#
+X4 = matrix(D[,4], N, N)#
+X5 = matrix(D[,5], N, N)#
+#
+if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=parameters[['sigma']])}#
+if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data}#
+if ((setting-1) %/% 2 == 0) {#
+    B1 = 4.5*matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)#
+} else if ((setting-1) %/% 2 == 1) {#
+    B1 = matrix(rep(coord, N), N, N)#
+} else if ((setting-1) %/% 2 == 2) {#
+    Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)#
+    Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)#
+    D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2#
+    d = D[435,]#
+    B1 = matrix(max(d)-d, N, N)#
+}#
+#
+parameters[['sigma']] = 1#
+parameters[['sigma.tau']] = 0.05#
+Y = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data#
+sapply(1:900, function(j) {matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)) } ) -> A#
+X1 = matrix(A[1,],N,N)#
+Y = matrix(A[2,],N,N)#
+#
+#mu = X1*B1#
+#Y = mu + epsilon#
+#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)#
+fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))#
+#
+vars = cbind(B1=as.vector(B1!=0))#, B2=as.vector(B2!=0), B3=as.vector(B3!=0))#
+oracle = list()#
+for (i in 1:N**2) { #
+    oracle[[i]] = character(0)#
+    if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }#
+}
+library(geoR)#
+library(gwselect)#
+library(doMC)#
+registerCores(n=3)#
+#
+seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])#
+B = 100#
+N = 30#
+coord = seq(0, 1, length.out=N)#
+#
+#Establish the simulation parameters#
+#settings = 12#
+#tau = rep(0, settings)#
+#rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)#
+#sigma.tau = rep(0, settings)#
+#sigma = rep(c(0.5,1), settings/2)#
+#
+#Establish the simulation parameters#
+settings = 12#
+tau = rep(0, settings)#
+rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)#
+sigma.tau = rep(0, settings)#
+sigma = rep(c(0.5,1), settings/2)#
+#
+params = data.frame(tau, rho, sigma.tau, sigma)#
+#
+#Read command-line parameters#
+args = commandArgs(trailingOnly=TRUE)#
+#cluster = as.integer(args[1])#
+#process = as.integer(args[2])#
+cluster=NA#
+process=10#
+#
+#Simulation parameters are based on the value of process#
+setting = process %/% B + 1#
+parameters = params[setting,]#
+set.seed(seeds[process+1])#
+#
+#Generate the covariates:#
+if (parameters[['tau']] > 0) {#
+    d1 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d2 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d3 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d4 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+    d5 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data#
+} else {#
+    d1 = rnorm(N**2, mean=0, sd=1)#
+    d2 = rnorm(N**2, mean=0, sd=1)#
+    d3 = rnorm(N**2, mean=0, sd=1)#
+    d4 = rnorm(N**2, mean=0, sd=1)#
+    d5 = rnorm(N**2, mean=0, sd=1)#
+}#
+#
+loc.x = rep(coord, times=N)#
+loc.y = rep(coord, each=N)#
+#
+#Use the Cholesky decomposition to correlate the random fields:#
+S = matrix(parameters[['rho']], 5, 5)#
+diag(S) = rep(1, 5)#
+L = chol(S)#
+#
+#Force correlation on the Gaussian random fields:#
+D = as.matrix(cbind(d1, d2, d3, d4, d5)) %*% L#
+##
+X1 = matrix(D[,1], N, N)#
+X2 = matrix(D[,2], N, N)#
+X3 = matrix(D[,3], N, N)#
+X4 = matrix(D[,4], N, N)#
+X5 = matrix(D[,5], N, N)#
+#
+if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=parameters[['sigma']])}#
+if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data}#
+if ((setting-1) %/% 2 == 0) {#
+    B1 = 4.5*matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)#
+} else if ((setting-1) %/% 2 == 1) {#
+    B1 = matrix(rep(coord, N), N, N)#
+} else if ((setting-1) %/% 2 == 2) {#
+    Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)#
+    Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)#
+    D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2#
+    d = D[435,]#
+    B1 = matrix(max(d)-d, N, N)#
+}#
+#
+parameters[['sigma']] = 1#
+parameters[['sigma.tau']] = 0.05#
+Y = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']]**2,parameters[['sigma.tau']]))$data#
+sapply(1:900, function(j) {matrix(c(X1[j], Y[j]),1,2) %*% chol(matrix(c(1,B1[j],B1[j],25),2,2)) } ) -> A#
+X1 = matrix(A[1,],N,N)#
+Y = matrix(A[2,],N,N)#
+#
+#mu = X1*B1#
+#Y = mu + epsilon#
+#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)#
+fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))#
+#
+vars = cbind(B1=as.vector(B1!=0))#, B2=as.vector(B2!=0), B3=as.vector(B3!=0))#
+oracle = list()#
+for (i in 1:N**2) { #
+    oracle[[i]] = character(0)#
+    if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }#
+}
+Y
+var(Y)
+Y
+var(vector(Y))
+var(as.vector(Y))
+var(as.vector(X1))
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+library(MASS)#
+#
+#load necessary R libraries#
+library(mgcv)#
+library(nlme)#
+library(tweedie)#
+library(Matrix)#
+library(plotrix)#
+#Import the data and the heatmap code.#
+setwd("~/git/paleon")#
+source("code/biomass-import.r")#
+taxa = c('Cherries', 'Willow', 'Walnuts', 'Hickory', 'Beech', 'Fir', 'Spruce', 'Ironwoods', 'Cedar', 'Hemlock', 'Basswood', 'Ashes', 'Elms', 'Poplar', 'Pine', 'Tamarack', 'Birches', 'Maple', 'Oaks')#
+#args <- commandArgs(trailingOnly = TRUE)#
+#indx = as.numeric(args[1])#
+#sp = taxa[indx]#
+sp='tot'#
+#
+#Establish the file for output#
+#sink(paste("output/", sp, ".txt", sep=""))#
+print("running for: ")#
+print(sp)#
+#
+##################################################################
+#Modeling - Tweedie#
+##################################################################
+#Make the one-stage model#
+#Set up the data, including mean composition within the first-order neighborhood:#
+modeldata = list(biomass=biomass.wi[,sp], x=composition.wi[,'x'], y=composition.wi[,'y'])#
+#Function to set the optimial Tweedie theta:#
+bm.opt = function(theta, data, k=150) {#
+	result = list()#
+#
+	data = as.data.frame(data)#
+	model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))#
+	#model = gamm(biomass~s(x,y,k=k), data=data, correlation=corGaus(form=~x+y), gamma=1.4, family=Tweedie(p=theta, link='log'))#
+    #cat(paste("theta: ", theta, '\n', sep=''))#
+	#print(summary(model))#
+	#print(logLik(model))#
+#
+	#Get the scale (a) and the location (b)#
+	sqrt(abs(resid(model, type='deviance'))) -> scale#
+	predict(model, type='link') -> loc#
+	m = lm(scale~loc)#
+	#print(summary(m))#
+#
+    cat(paste("Tuning. theta: ", round(theta, 3), ", slope: ", round(abs(coef(m)[2]),4), '\n', sep=''))#
+#
+	return(abs(coef(m)[2]))#
+}#
+k=250#
+tuning = optimize(bm.opt, interval=c(1,2), data=modeldata, k=k, tol=0.01)#
+cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))#
+bm = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, family=Tweedie(p=tuning$minimum, link='log'))#
+Xp = predict(bm, type='lpmatrix')#
+br = mvrnorm(n=n, coef(bm), bm$Vp)#
+#
+f = fitted(bm)#
+modeldata.bs = modeldata#
+n = nrow(biomass.wi)#
+#
+mean.biomass = vector()#
+br = matrix(0,nrow=0, ncol=length(coef(bm)))#
+ss = list()#
+theta = vector()#
+s2 = vector()#
+#
+S = 19#
+for (i in 1:S) {#
+    y = rtweedie(n, mu=f, phi=bm$sig2, power=tuning$minimum)#
+    modeldata.bs$biomass = y#
+#
+    tuning.bs = optimize(bm.opt, interval=c(1,2), data=modeldata.bs, k=k, tol=0.01)#
+    sp = gam(biomass~s(x,y,k=k), data=modeldata.bs, gamma=1.4, family=Tweedie(p=tuning.bs$minimum, link='log'))$sp#
+    bm2 = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, sp=sp, family=Tweedie(p=tuning.bs$minimum, link='log'))#
+#
+    br = rbind(br, mvrnorm(n=100, coef(bm2), bm2$Vp))#
+#
+    s2 = c(s2, bm2$sig2)#
+    ss[[i]] = sp#
+    theta = c(theta, tuning.bs$minimum)#
+}#
+#Add some draws from the original model:#
+br = rbind(br, mvrnorm(n=100, coef(bm), bm$Vp))#
+#
+#Get the estimated total mean biomass for each simulation:#
+lp = Xp %*% t(br)#
+mean.biomass.2 = colSums(exp(lp))
+theta
+hist(theta)
+hist(mean.biomass.2)
+hist(biomass.wi)
+dim(biomass.wi)
+hist(modeldata$biomass)
+hist(modeldata$biomass, breaks=50)
+sum(modeldata$biomass==0)
+hist(log(modeldata$biomass), breaks=50)
+?rtweedie
+hist(theta)
+ss
+hist(ss)
+hist(sapply(ss, [[]]))
+hist(sapply(ss, function(x) {x[[1]]}))

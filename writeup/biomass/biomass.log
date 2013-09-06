@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  10 MAY 2013 10:17
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  30 AUG 2013 11:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -14,9 +14,9 @@ h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
 ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
 rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
 kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
- polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
-lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
-welsh, loaded.
+ piedmontese, polish, portuguese, romanian, romansh, russian, sanskrit, serbian
+, serbianc, slovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, u
+ppersorbian, welsh, loaded.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/elsarticle/elsarticle.cls
 Document Class: elsarticle 2009/09/17, 1.2.0: Elsevier Ltd
 \@bls=\dimen102
@@ -56,7 +56,7 @@ File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
 Package graphics Info: Driver file: xetex.def on input line 91.
 
 (/usr/local/texlive/2012/texmf-dist/tex/xelatex/xetex-def/xetex.def
-File: xetex.def 2009/11/22 v0.94 LaTeX color/graphics driver for XeTeX (RRM/JK)
+File: xetex.def 2013/02/04 v0.95 LaTeX color/graphics driver for XeTeX (RRM/JK)
 
 ))
 \Gin@req@height=\dimen104
@@ -104,7 +104,7 @@ LaTeX Info: Redefining \cite on input line 694.
 
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2000/07/18 v2.13 AMS math features
+Package: amsmath 2013/01/14 v2.14 AMS math features
 \@mathmargin=\skip47
 
 For additional information on amsmath, use the `?' option.
@@ -124,20 +124,20 @@ Package: amsbsy 1999/11/29 v1.2d
 Package: amsopn 1999/12/14 v2.01 operator names
 )
 \inf@bad=\count95
-LaTeX Info: Redefining \frac on input line 211.
+LaTeX Info: Redefining \frac on input line 210.
 \uproot@=\count96
 \leftroot@=\count97
-LaTeX Info: Redefining \overline on input line 307.
+LaTeX Info: Redefining \overline on input line 306.
 \classnum@=\count98
 \DOTSCASE@=\count99
-LaTeX Info: Redefining \ldots on input line 379.
-LaTeX Info: Redefining \dots on input line 382.
-LaTeX Info: Redefining \cdots on input line 467.
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
 \Mathstrutbox@=\box30
 \strutbox@=\box31
 \big@size=\dimen111
-LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
-LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
 \macc@depth=\count100
 \c@MaxMatrixCols=\count101
 \dotsspace@=\muskip10
@@ -158,11 +158,11 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 \multlinegap=\skip48
 \multlinetaggap=\skip49
 \mathdisplay@stack=\toks21
-LaTeX Info: Redefining \[ on input line 2666.
-LaTeX Info: Redefining \] on input line 2667.
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amscls/amsthm.sty
-Package: amsthm 2009/07/02 v2.20.1
+Package: amsthm 2004/08/06 v2.20
 \thm@style=\toks22
 \thm@bodyfont=\toks23
 \thm@headfont=\toks24
@@ -172,17 +172,17 @@ Package: amsthm 2009/07/02 v2.20.1
 \thm@postskip=\skip51
 \thm@headsep=\skip52
 \dth@everypar=\toks27
-LaTeX Info: Redefining \qed on input line 244.
+LaTeX Info: Redefining \qed on input line 283.
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/amssymb.sty
-Package: amssymb 2009/06/22 v3.00
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/amsfonts.sty
-Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
-(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
 (/usr/local/texlive/2012/texmf-dist/tex/generic/mathabx/mathabx.sty
 Package: mathabx 2003/07/29 v0.0 Non-standard LaTeX package mathabx
@@ -581,77 +581,46 @@ Examine \tiny starts \@setfontsize size may be \@vipt.
 Examine \huge starts \@setfontsize size may be \@xxpt. 
 Examine \Huge starts \@setfontsize size may be \@xxvpt. )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/caption.sty
-Package: caption 2012/02/19 v3.2f Customizing captions (AR)
+Package: caption 2013/02/03 v3.3-65 Customizing captions (AR)
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/caption3.sty
-Package: caption3 2012/01/12 v1.4b caption3 kernel (AR)
+Package: caption3 2013/02/03 v1.5-62 caption3 kernel (AR)
 \captionmargin=\dimen120
 \captionmargin@=\dimen121
 \captionwidth=\dimen122
-\caption@indent=\dimen123
-\caption@parindent=\dimen124
-\caption@hangindent=\dimen125
-Package caption Info: Unknown document class (or package),
-(caption)             standard defaults will be used.
+\caption@tempdima=\dimen123
+\caption@indent=\dimen124
+\caption@parindent=\dimen125
+\caption@hangindent=\dimen126
 )
-
-Package caption Warning: Unsupported document class (or package) detected,
-(caption)                usage of the caption package is not recommended.
-See the caption package documentation for explanation.
-
-Package caption Info: \@makecaption = \long macro:#1#2->\vskip \abovecaptionski
-p \footnotesize \sbox \@tempboxa {#1: #2}\ifdim \wd \@tempboxa >\hsize #1: #2\p
-ar \else \global \@minipagefalse \hb@xt@ \hsize {\hfil \box \@tempboxa \hfil }\
-fi \vskip \belowcaptionskip .
 \c@ContinuedFloat=\count115
-) (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/subcaption.sty
-Package: subcaption 2012/01/12 v1.1d Sub-captions (AR)
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
 \c@subfigure=\count116
 \c@subtable=\count117
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2005/04/14 v1.61803 publication quality tables
-\heavyrulewidth=\dimen126
-\lightrulewidth=\dimen127
-\cmidrulewidth=\dimen128
-\belowrulesep=\dimen129
-\belowbottomsep=\dimen130
-\aboverulesep=\dimen131
-\abovetopsep=\dimen132
-\cmidrulesep=\dimen133
-\cmidrulekern=\dimen134
-\defaultaddspace=\dimen135
+\heavyrulewidth=\dimen127
+\lightrulewidth=\dimen128
+\cmidrulewidth=\dimen129
+\belowrulesep=\dimen130
+\belowbottomsep=\dimen131
+\aboverulesep=\dimen132
+\abovetopsep=\dimen133
+\cmidrulesep=\dimen134
+\cmidrulekern=\dimen135
+\defaultaddspace=\dimen136
 \@cmidla=\count118
 \@cmidlb=\count119
-\@aboverulesep=\dimen136
-\@belowrulesep=\dimen137
+\@aboverulesep=\dimen137
+\@belowrulesep=\dimen138
 \@thisruleclass=\count120
 \@lastruleclass=\count121
-\@thisrulewidth=\dimen138
+\@thisrulewidth=\dimen139
 )
-(./biomass.aux
-
-LaTeX Warning: Label `fig:oaks-biomass-observed' multiply defined.
-
-
-LaTeX Warning: Label `fig:oaks-biomass-fitted' multiply defined.
-
-
-LaTeX Warning: Label `fig:oaks-biomass-residual' multiply defined.
-
-
-LaTeX Warning: Label `fig:oaks-biomass-spline' multiply defined.
-
-
-LaTeX Warning: Label `fig:oaks-biomass-spline' multiply defined.
-
-
-LaTeX Warning: Label `fig:oaks-biomass-spline' multiply defined.
-
-
-LaTeX Warning: Label `fig:oaks-biomass-spline' multiply defined.
-
-)
+(./biomass.aux)
 \openout1 = `biomass.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
@@ -670,12 +639,11 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Try loading font information for U+msa on input line 45.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 45.
-
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 Underfull \hbox (badness 10000) in paragraph at lines 51--52
 
@@ -716,6 +684,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 86--88
  []
 
 
+LaTeX Warning: Reference `fig:oaks-biomass-observed' on page 3 undefined on inp
+ut line 91.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 91--92
 
  []
@@ -731,9 +703,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 113--114
  []
 
 [4]
+
+LaTeX Warning: Reference `fig:oaks-tweedie2-location-scale' on page 5 undefined
+ on input line 134.
+
 \openout4 = `biomass.fff'.
 
- (biomass.fff) AED endfloat: Processing end Figures and Tables [5]
+(biomass.fff) AED endfloat: Processing end Figures and Tables [5]
 (./biomass.lof)
 \tf@lof=\write6
 \openout6 = `biomass.lof'.
@@ -742,18 +718,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 113--114
 
 
 ] (./biomass.fff
-File: ../../figures/Oaks-biomass-observed.pdf Graphic file (type QTm)
+File: ../../figures//Oaks-biomass-observed.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-observed.pdf" > [7]
+<use  "../../figures//Oaks-biomass-observed.pdf" > [7]
 File: ../../figures/Oaks-biomass-fitted.pdf Graphic file (type QTm)
 
 <use  "../../figures/Oaks-biomass-fitted.pdf" > [8]
 File: ../../figures/Oaks-biomass-residual.pdf Graphic file (type QTm)
 
 <use  "../../figures/Oaks-biomass-residual.pdf" > [9]
-File: ../../figures/Oaks-biomass-spline.pdf Graphic file (type QTm)
+File: ../../figures/Exploration/Oaks-biomass-spline.pdf Graphic file (type QTm)
 
-<use  "../../figures/Oaks-biomass-spline.pdf" > [10]
+
+<use  "../../figures/Exploration/Oaks-biomass-spline.pdf" > [10]
 File: ../../figures/Exploration/Oak-Tweedie-E-biomass.pdf Graphic file (type QT
 m)
 
@@ -788,16 +765,19 @@ ype QTm)
  <use  "../../figures/Exploration/Oak-Tweedie2-location-scale.pdf" >
 [18]) (./biomass.aux)
 
-LaTeX Warning: There were multiply-defined labels.
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 4445 strings out of 494004
- 62641 string characters out of 3150890
- 124862 words of memory out of 3000000
- 7585 multiletter control sequences out of 15000+200000
+ 4470 strings out of 493994
+ 63127 string characters out of 3150335
+ 124493 words of memory out of 3000000
+ 7610 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,18n,38p,523b,377s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,18n,38p,523b,413s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on biomass.pdf (18 pages).

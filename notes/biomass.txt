@@ -1,0 +1,4 @@
+#PalEON biomass modeling
+
+##Biomass data
+Per-grid-cell biomass data for the upper midwest, calculated from stem density and basal area via allometry. Simon did those calculations.
