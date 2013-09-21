@@ -5,7 +5,7 @@ One method for modeling continuous data with exact zeros is to separately make a
 
 The Tweedie family of distributions can directly model a process that produces a continuous positive response with exact zeros. The form of the Tweedie distribution is
 
-$$f(y;p, \phi, \mu) = a(y,p,phi) \exp{\left[\phi^{-1}\left\{y\theta - \kappa(\theta)\right\}\right]$$
+$$f(y;p, \phi, \mu) = a(y,p,phi) \exp{\left[\phi^{-1}\left\{y\theta - \kappa(\theta)\right\}\right]}$$
 
 Where $\theta = (1-p)^{-1}\mu^{1-p}$, $\kappa(\theta) = (2-p)^{-1}\mu^{2-p}$, and $a(y,p,\phi)$ is complicated and not of interest right now (we'll get to it later). For $p \in (1,2)$, the Tweedie distribution is equal to a sum of $N$ independent draws from a Gamma$(\alpha,\gamma)$ distribution, where $\alpha = -(2-p) / (1-p)$, $\gamma = \phi(p-1) \mu^(p-1)$, and $N$ is drawn from a Poisson$(\lambda)$ distribution and $\lambda = \phi^{-1}(2-p)^{-1}\mu^{2-p}$.
 
@@ -16,7 +16,7 @@ A Tweedie distribution is a member of the exponential family if the power parame
 ##Simulations
 Some simple simulations indicate that maximum likelihood estimates $p$ well when $p$ is near 1.5 and $\phi$ is near 1. When $p$ is near 1 or near 2 and $\phi$ is 1, $\hat{p}$ is biased toward 1.5. When $\mu$ grows (by adding an intercept) and $\phi$ is set to 3, then $\hat{p}$ is biased toward 2 (or was for this simulation, where the true $p$ was 1.3.) (These are MLE $\hat{p}$'s)
 
-When $\hi$ and $\mu$ were changed, the location-scale-slope-based $\hat{p}$ was stable, if stil a bit biased.
+When $\phi$ and $\mu$ were changed, the location-scale-slope-based $\hat{p}$ was stable, if stil a bit biased.
 
 The simulations noted above were for a simple linear model case:
 
