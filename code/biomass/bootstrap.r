@@ -1,25 +1,12 @@
-#These functions import code and data directly from the github servers:
-source("../brooks/code/source_https.r")
-source("../brooks/code/load_https.r")
-
 #load necessary R libraries
 library(MASS)
 library(mgcv)
 library(nlme)
-library(tweedie)
+library(tweedie, lib.loc=c('R', 'R-libs'))
 library(Matrix)
-library(plotrix)
-
-#Import the data and the heatmap code.
-source_https("https://raw.github.com/wesesque/paleon/master/code/biomass-import.r")
-taxa = c('Cherries', 'Willow', 'Walnuts', 'Hickory', 'Beech', 'Fir', 'Spruce', 'Ironwoods', 'Cedar', 'Hemlock', 'Basswood', 'Ashes', 'Elms', 'Poplar', 'Pine', 'Tamarack', 'Birches', 'Maple', 'Oaks')
-#args <- commandArgs(trailingOnly = TRUE)
-#indx = as.numeric(args[1])
-#sp = taxa[indx]
-sp='tot'
 
 #Establish the file for output
-#sink(paste("output/", sp, ".txt", sep=""))
+sink(paste("output/", sp, "-log.txt", sep=""))
 cat(paste("running for: ", sp, '\n', sep=''))
 
 #################################################################
@@ -62,20 +49,18 @@ f = fitted(bm)
 modeldata.bs = modeldata
 n = nrow(biomass.wi)
 
-mean.biomass = vector()
 br = matrix(0,nrow=0, ncol=length(coef(bm)))
 ss = list()
 theta = vector()
 s2 = vector()
 
-S = 19
+S = 9
 for (i in 1:S) {
     y = rtweedie(n, mu=f, phi=bm$sig2, power=tuning$minimum)
     modeldata.bs$biomass = y
 
-    tuning.bs = optimize(bm.opt, interval=c(1,2), data=modeldata.bs, k=k, tol=0.01)
+    tuning.bs = optimize(bm.opt, interval=c(1,2), data=modeldata.bs, k=k, tol=0.02)
     sp = gam(biomass~s(x,y,k=k), data=modeldata.bs, gamma=1.4, family=Tweedie(p=tuning.bs$minimum, link='log'))$sp
-    
 
     bm2 = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, sp=sp, family=Tweedie(p=tuning.bs$minimum, link='log'))
 
@@ -91,4 +76,9 @@ br = rbind(br, mvrnorm(n=100, coef(bm), bm$Vp))
 
 #Get the estimated total mean biomass for each simulation:
 lp = Xp %*% t(br)
-mean.biomass.2 = colSums(exp(lp))
+#mean.biomass = colSums(exp(lp))
+
+write(lp, file = paste("output/logbiomass-", sp, ".csv", sep=""),
+    ncolumns = ncol(lp),
+    append = FALSE,
+    sep = ",")
