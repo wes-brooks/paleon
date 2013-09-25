@@ -43,12 +43,12 @@ bm = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, family=Tweedie(p=tuning$
 ###################
 #Draw from the "posterior" distribution of biomass:
 ###################
+n = nrow(biomass.wi)
 Xp = predict(bm, type='lpmatrix')
 br = mvrnorm(n=n, coef(bm), bm$Vp)
 
 f = fitted(bm)
 modeldata.bs = modeldata
-n = nrow(biomass.wi)
 
 br = matrix(0,nrow=0, ncol=length(coef(bm)))
 ss = list()
