@@ -8,7 +8,7 @@ source("../brooks/code/load_https.r")
 source_https("https://raw.github.com/wesesque/paleon/master/code/biomass-import.r")
 taxa = c('Cherries', 'Willow', 'Walnuts', 'Hickory', 'Beech', 'Fir', 'Spruce', 'Ironwoods', 'Cedar', 'Hemlock', 'Basswood', 'Ashes', 'Elms', 'Poplar', 'Pine', 'Tamarack', 'Birches', 'Maple', 'Oaks')
 args <- commandArgs(trailingOnly = TRUE)
-indx = as.numeric(args[1])
+indx = as.numeric(args[2])
 sp = taxa[indx]
 
 source_https("https://raw.github.com/wesesque/paleon/master/code/biomass/bootstrap.r")
