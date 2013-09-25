@@ -10,6 +10,6 @@ taxa = c('Cherries', 'Willow', 'Walnuts', 'Hickory', 'Beech', 'Fir', 'Spruce', '
 args <- commandArgs(trailingOnly = TRUE)
 cluster = as.numeric(args[1])
 indx = as.numeric(args[2]) + 1
-sp = taxa[indx]
+taxon = taxa[indx]
 
 source_https("https://raw.github.com/wesesque/paleon/master/code/biomass/bootstrap.r")

@@ -7,15 +7,15 @@ library(tweedie, lib.loc='R-libs')
 library(Matrix)
 
 #Establish the file for output
-#sink(paste("output/", sp, "-log.txt", sep=""))
-cat(paste("running for: ", sp, '\n', sep=''))
+#sink(paste("output/", taxon, "-log.txt", sep=""))
+cat(paste("running for: ", taxon, '\n', sep=''))
 
 #################################################################
 #Modeling - Tweedie
 #################################################################
 #Make the one-stage model
 #Set up the data, including mean composition within the first-order neighborhood:
-modeldata = list(biomass=biomass.wi[,sp], x=biomass.wi[,'x'], y=biomass.wi[,'y'])
+modeldata = list(biomass=biomass.wi[,taxon], x=biomass.wi[,'x'], y=biomass.wi[,'y'])
 
 #Function to set the optimial Tweedie theta:
 bm.opt = function(theta, data, k=150) {
@@ -79,7 +79,7 @@ br = rbind(br, mvrnorm(n=100, coef(bm), bm$Vp))
 lp = Xp %*% t(br)
 #mean.biomass = colSums(exp(lp))
 
-write(lp, file = paste("output/logbiomass-", cluster, "-", sp, ".csv", sep=""),
+write(lp, file = paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
     ncolumns = ncol(lp),
     append = FALSE,
     sep = ",")
