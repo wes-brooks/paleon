@@ -78,7 +78,7 @@ br = rbind(br, mvrnorm(n=100, coef(bm), bm$Vp))
 lp = Xp %*% t(br)
 #mean.biomass = colSums(exp(lp))
 
-write(lp, file = paste("output/logbiomass-", sp, ".csv", sep=""),
+write(lp, file = paste("output/logbiomass-", cluster, "-", sp, ".csv", sep=""),
     ncolumns = ncol(lp),
     append = FALSE,
     sep = ",")
