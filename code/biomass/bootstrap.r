@@ -1,13 +1,10 @@
-library(MASS)
-
 #load necessary R libraries
+library(MASS)
 library(mgcv)
 library(nlme)
 library(tweedie)
 library(Matrix)
 library(plotrix)
-
-
 
 #Import the data and the heatmap code.
 setwd("~/git/paleon")
