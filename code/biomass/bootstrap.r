@@ -14,7 +14,7 @@ cat(paste("running for: ", sp, '\n', sep=''))
 #################################################################
 #Make the one-stage model
 #Set up the data, including mean composition within the first-order neighborhood:
-modeldata = list(biomass=biomass.wi[,sp], x=composition.wi[,'x'], y=composition.wi[,'y'])
+modeldata = list(biomass=biomass.wi[,sp], x=biomass.wi[,'x'], y=biomass.wi[,'y'])
 
 #Function to set the optimial Tweedie theta:
 bm.opt = function(theta, data, k=150) {
