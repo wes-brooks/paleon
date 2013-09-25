@@ -1,4 +1,4 @@
-#! /usr/bin/sh
+#! /bin/sh
 
 for ((i=1; i<=19 ; i++))
 do
