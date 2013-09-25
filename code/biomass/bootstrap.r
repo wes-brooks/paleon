@@ -2,7 +2,7 @@
 library(MASS)
 library(mgcv)
 library(nlme)
-library(RCurl, lib.loc='statmod')
+library(statmod, lib.loc='R-libs')
 library(tweedie, lib.loc='R-libs')
 library(Matrix)
 
