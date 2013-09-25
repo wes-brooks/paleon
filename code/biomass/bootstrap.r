@@ -2,7 +2,7 @@
 library(MASS)
 library(mgcv)
 library(nlme)
-library(tweedie)
+library(tweedie, lib.loc='R-libs')
 library(Matrix)
 
 #Establish the file for output
