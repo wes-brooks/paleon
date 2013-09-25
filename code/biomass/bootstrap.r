@@ -20,7 +20,7 @@ sp='tot'
 
 #Establish the file for output
 #sink(paste("output/", sp, ".txt", sep=""))
-cat(paste("running for: ", sp, '\n' sep=''))
+cat(paste("running for: ", sp, '\n', sep=''))
 
 #################################################################
 #Modeling - Tweedie
