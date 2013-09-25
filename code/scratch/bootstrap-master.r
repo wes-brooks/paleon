@@ -1,4 +1,4 @@
-library(RCurl, lib.loc=c('R', 'R-libs'))
+library(RCurl)
 
 #These functions import code and data directly from the github servers:
 source("../brooks/code/source_https.r")
