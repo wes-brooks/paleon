@@ -6,7 +6,7 @@ library(tweedie)
 library(Matrix)
 
 #Establish the file for output
-sink(paste("output/", sp, "-log.txt", sep=""))
+#sink(paste("output/", sp, "-log.txt", sep=""))
 cat(paste("running for: ", sp, '\n', sep=''))
 
 #################################################################
