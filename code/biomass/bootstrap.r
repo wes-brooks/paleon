@@ -1,3 +1,7 @@
+#These functions import code and data directly from the github servers:
+source("../brooks/code/source_https.r")
+source("../brooks/code/load_https.r")
+
 #load necessary R libraries
 library(MASS)
 library(mgcv)
@@ -7,8 +11,7 @@ library(Matrix)
 library(plotrix)
 
 #Import the data and the heatmap code.
-setwd("~/git/paleon")
-source("code/biomass-import.r")
+source_https("https://raw.github.com/wesesque/paleon/master/code/biomass-import.r")
 taxa = c('Cherries', 'Willow', 'Walnuts', 'Hickory', 'Beech', 'Fir', 'Spruce', 'Ironwoods', 'Cedar', 'Hemlock', 'Basswood', 'Ashes', 'Elms', 'Poplar', 'Pine', 'Tamarack', 'Birches', 'Maple', 'Oaks')
 #args <- commandArgs(trailingOnly = TRUE)
 #indx = as.numeric(args[1])
@@ -17,8 +20,7 @@ sp='tot'
 
 #Establish the file for output
 #sink(paste("output/", sp, ".txt", sep=""))
-print("running for: ")
-print(sp)
+cat(paste("running for: ", sp, '\n' sep=''))
 
 #################################################################
 #Modeling - Tweedie
@@ -27,38 +29,32 @@ print(sp)
 #Set up the data, including mean composition within the first-order neighborhood:
 modeldata = list(biomass=biomass.wi[,sp], x=composition.wi[,'x'], y=composition.wi[,'y'])
 
-
-
 #Function to set the optimial Tweedie theta:
 bm.opt = function(theta, data, k=150) {
 	result = list()
 
 	data = as.data.frame(data)
 	model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
-	#model = gamm(biomass~s(x,y,k=k), data=data, correlation=corGaus(form=~x+y), gamma=1.4, family=Tweedie(p=theta, link='log'))
-	
-    #cat(paste("theta: ", theta, '\n', sep=''))
-	#print(summary(model))
-	#print(logLik(model))
 
 	#Get the scale (a) and the location (b)
 	sqrt(abs(resid(model, type='deviance'))) -> scale
 	predict(model, type='link') -> loc
 	m = lm(scale~loc)
-	#print(summary(m))
 
     cat(paste("Tuning. theta: ", round(theta, 3), ", slope: ", round(abs(coef(m)[2]),4), '\n', sep=''))
-
 	return(abs(coef(m)[2]))
 }
-
 
 k=250
 tuning = optimize(bm.opt, interval=c(1,2), data=modeldata, k=k, tol=0.01)
 cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))
+
+#Produce a model with the 'optimal' theta:
 bm = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, family=Tweedie(p=tuning$minimum, link='log'))
 
-
+###################
+#Draw from the "posterior" distribution of biomass:
+###################
 Xp = predict(bm, type='lpmatrix')
 br = mvrnorm(n=n, coef(bm), bm$Vp)
 
@@ -89,8 +85,6 @@ for (i in 1:S) {
     ss[[i]] = sp
     theta = c(theta, tuning.bs$minimum)
 }
-
-
 
 #Add some draws from the original model:
 br = rbind(br, mvrnorm(n=100, coef(bm), bm$Vp))

@@ -1,12 +1,8 @@
-#These functions import code and data directly from the github servers:
-source("../brooks/code/source_https.r")
-source("../brooks/code/load_https.r")
-
 #Import the stem density, count, and standard deviation data
-composition <- load_https("https://raw.github.com/wesesque/paleon/master/data/glo.forest.composition_v1_3alb.csv", header=TRUE, row.names=NULL, sep=',')
-biomass <- load_https("https://raw.github.com/wesesque/paleon/master/data/biomass.tablev1_3alb.csv", header=TRUE, row.names=NULL, sep=',')
-biomass.wi <- load_https("https://raw.github.com/wesesque/paleon/master/data/biomassbysp_1_3_albwisc.csv", header=TRUE, row.names=NULL, sep=',')
-stemdens <- load_https("https://raw.github.com/wesesque/paleon/master/data/density.ba.biomass_v1_3alb.csv", header=TRUE, row.names=NULL, sep=',')
+composition <- load_https("https://raw.github.com/wesesque/paleon/master/data/glo.forest.composition_v1_3alb.csv")
+biomass <- load_https("https://raw.github.com/wesesque/paleon/master/data/biomass.tablev1_3alb.csv")
+biomass.wi <- load_https("https://raw.github.com/wesesque/paleon/master/data/biomassbysp_1_3_albwisc.csv")
+stemdens <- load_https("https://raw.github.com/wesesque/paleon/master/data/density.ba.biomass_v1_3alb.csv")
 
 #Process the Wisconsin biomass data
 p0 = ncol(biomass.wi)
