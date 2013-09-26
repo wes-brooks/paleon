@@ -86,8 +86,15 @@ for (i in 1:S) {
 #Evaluate the linear predictors for each draw of the coefficients:
 lp = Xp %*% t(beta.resampled)
 
-#Write the outputs to disk:
+#Write the draws of the linear predictors to disk:
 write(lp, file = paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
     ncolumns = ncol(lp),
+    append = FALSE,
+    sep = ",")
+
+#Write the parameters to disk:
+params = as.data.frame(list(s2, smoothing.params, theta))
+write(params, file = paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
+    ncolumns = ncol(3),
     append = FALSE,
     sep = ",")
