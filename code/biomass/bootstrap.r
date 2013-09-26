@@ -1,4 +1,3 @@
-#load necessary R libraries
 library(MASS)
 library(mgcv)
 library(nlme)
@@ -6,79 +5,88 @@ library(statmod, lib.loc='R-libs')
 library(tweedie, lib.loc='R-libs')
 library(Matrix)
 
-#Establish the file for output
 #sink(paste("output/", taxon, "-log.txt", sep=""))
 cat(paste("running for: ", taxon, '\n', sep=''))
 
+#Modeling constants:
+knots = 250
+powertol = 0.02
+
 #################################################################
-#Modeling - Tweedie
+#Modeling - Tweedie one-stage
 #################################################################
-#Make the one-stage model
 #Set up the data, including mean composition within the first-order neighborhood:
-modeldata = list(biomass=biomass.wi[,taxon], x=biomass.wi[,'x'], y=biomass.wi[,'y'])
+dataset = biomass.wi
+modeldata = list(biomass=dataset[,taxon], x=dataset[,'x'], y=dataset[,'y'])
+modeldata = as.data.frame(modeldata)
 
 #Function to set the optimial Tweedie theta:
-bm.opt = function(theta, data, k=150) {
-	result = list()
+powertune = function(theta, data, k=150) {
+    #Make the model and export it (so we dont have to reproduce it after optimization)
+    model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
+    assign('model.out', model, envir=.GlobalEnvironment)
 
-	data = as.data.frame(data)
-	model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
+	#Get the scale and the location
+	scale <- sqrt(abs(resid(model, type='deviance')))
+	loc <- predict(model, type='link')
 
-	#Get the scale (a) and the location (b)
-	sqrt(abs(resid(model, type='deviance'))) -> scale
-	predict(model, type='link') -> loc
+    #We are looking for the power parameter that gives us zero slope for the scale-location plot:
 	m = lm(scale~loc)
-
     cat(paste("Tuning. theta: ", round(theta, 3), ", slope: ", round(abs(coef(m)[2]),4), '\n', sep=''))
 	return(abs(coef(m)[2]))
 }
 
-k=250
-tuning = optimize(bm.opt, interval=c(1,2), data=modeldata, k=k, tol=0.01)
+#Locate the optimal theta. The optimization also exports the optimal model as object 'model.out'
+tuning = optimize(powertune, interval=c(1,2), data=modeldata, k=knots, tol=powertol)
 cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))
-
-#Produce a model with the 'optimal' theta:
-bm = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, family=Tweedie(p=tuning$minimum, link='log'))
+mle <- model.out
 
 ###################
 #Draw from the "posterior" distribution of biomass:
 ###################
-n = nrow(biomass.wi)
-Xp = predict(bm, type='lpmatrix')
-br = mvrnorm(n=n, coef(bm), bm$Vp)
+#Get the matrix that is multiplied by the coefficients to compute the linear predictor:
+Xp = predict(mle, type='lpmatrix')
 
-f = fitted(bm)
-modeldata.bs = modeldata
+#Initialize the parametric bootstrap with the actual data and the MLEs of beta and mu:
+data.boot = modeldata
+fit = fitted(mle)
+beta.resampled = Matrix(mvrnorm(n=100, coef(mle), mle$Vp), nrow=100, ncol=length(coef(mle)))
 
-br = matrix(0,nrow=0, ncol=length(coef(bm)))
-ss = list()
-theta = vector()
-s2 = vector()
+#Initialize structures to hold the parametric bootstrap estimates:
+smoothing.params = c(mle$sp)
+theta = c(tuning$minimum)
+s2 = c(mle$sig2)
 
+#Resample from the model (this is the parametric bootstrap):
 S = 9
 for (i in 1:S) {
-    y = rtweedie(n, mu=f, phi=bm$sig2, power=tuning$minimum)
-    modeldata.bs$biomass = y
+    #Regenerate the output via the parametric model:
+    y = rtweedie(nrow(modeldata), mu=fit, phi=mle$sig2, power=tuning$minimum)
+    data.boot$biomass = y
 
-    tuning.bs = optimize(bm.opt, interval=c(1,2), data=modeldata.bs, k=k, tol=0.02)
-    sp = gam(biomass~s(x,y,k=k), data=modeldata.bs, gamma=1.4, family=Tweedie(p=tuning.bs$minimum, link='log'))$sp
+    #Tune the model on the regenerated data
+    tuning.boot = optimize(powertune, interval=c(1,2), data=data.boot, k=knots, tol=powertol)
+    sp.boot = model.out$sp
+    theta.boot = tuning.boot$minimum
+    
+    #Run the model on the original data, using the parameters from the bootstrap:
+    m.boot = gam(biomass~s(x,y,k=knots), data=modeldata,
+            gamma=1.4, sp=sp.boot,
+            family=Tweedie(p=theta.boot, link='log'))
 
-    bm2 = gam(biomass~s(x,y,k=k), data=modeldata, gamma=1.4, sp=sp, family=Tweedie(p=tuning.bs$minimum, link='log'))
-
-    br = rbind(br, mvrnorm(n=100, coef(bm2), bm2$Vp))
-
-    s2 = c(s2, bm2$sig2)
-    ss[[i]] = sp
-    theta = c(theta, tuning.bs$minimum)
+    #Draw a bunch of spline coefficients from this estimate of their distribution:
+    beta.resampled = rbind(beta.resampled, mvrnorm(n=100, coef(m.boot), m.boot$Vp))
+    
+    #Add this round of parameters to the output:
+    s2 = c(s2, m.boot$sig2)
+    smoothing.params = c(smoothing.params, sp.boot)
+    theta = c(theta, theta.boot)
 }
 
-#Add some draws from the original model:
-br = rbind(br, mvrnorm(n=100, coef(bm), bm$Vp))
+#Evaluate the linear predictors for each draw of the coefficients:
+lp = Xp %*% t(beta.resampled)
 
-#Get the estimated total mean biomass for each simulation:
-lp = Xp %*% t(br)
-#mean.biomass = colSums(exp(lp))
-
+#Write the outputs to disk:
 write(lp, file = paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
     ncolumns = ncol(lp),
     append = FALSE,
