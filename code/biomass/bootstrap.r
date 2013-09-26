@@ -51,6 +51,13 @@ data.boot = modeldata
 fit = fitted(mle)
 beta.resampled = matrix(mvrnorm(n=100, coef(mle), mle$Vp), nrow=100, ncol=length(coef(mle)))
 
+#Evaluate the linear predictors for each draw of the coefficients and write to disk:
+lp = Xp %*% t(beta.resampled)
+write.csv(lp, file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
+    append=FALSE, row.names=FALSE, col.names=FALSE)
+lp = NULL
+beta.resampled = NULL
+
 #Initialize structures to hold the parametric bootstrap estimates:
 smoothing.params = c(mle$sp)
 theta = c(tuning$minimum)
@@ -74,24 +81,22 @@ for (i in 1:S) {
             family=Tweedie(p=theta.boot, link='log'))
 
     #Draw a bunch of spline coefficients from this estimate of their distribution:
-    beta.resampled = rbind(beta.resampled, mvrnorm(n=100, coef(m.boot), m.boot$Vp))
+    beta.resampled = mvrnorm(n=100, coef(m.boot), m.boot$Vp)
     
+    #Evaluate the linear predictors for each draw of the coefficients and write to disk:
+    lp = Xp %*% t(beta.resampled)
+    write.csv(lp, file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
+        append=TRUE, row.names=FALSE, col.names=FALSE)
+    lp = NULL
+    beta.resampled = NULL
+
     #Add this round of parameters to the output:
     s2 = c(s2, m.boot$sig2)
     smoothing.params = c(smoothing.params, sp.boot)
     theta = c(theta, theta.boot)
 }
 
-#Evaluate the linear predictors for each draw of the coefficients:
-lp = Xp %*% t(beta.resampled)
-
-#Write the draws of the linear predictors to disk:
-write.table(lp, file = paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
-    append = FALSE,
-    sep = ",")
-
 #Write the parameters to disk:
 params = as.data.frame(list(s2, smoothing.params, theta))
-write.table(params, file = paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
-    append = FALSE,
-    sep = ",")
+write.csv(params, file=paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
+    append=FALSE, row.names=FALSE, col.names=FALSE)
