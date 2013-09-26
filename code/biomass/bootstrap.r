@@ -3,7 +3,6 @@ library(mgcv)
 library(nlme)
 library(statmod, lib.loc='R-libs')
 library(tweedie, lib.loc='R-libs')
-library(Matrix)
 
 #sink(paste("output/", taxon, "-log.txt", sep=""))
 cat(paste("running for: ", taxon, '\n', sep=''))
@@ -50,7 +49,7 @@ Xp = predict(mle, type='lpmatrix')
 #Initialize the parametric bootstrap with the actual data and the MLEs of beta and mu:
 data.boot = modeldata
 fit = fitted(mle)
-beta.resampled = Matrix(mvrnorm(n=100, coef(mle), mle$Vp), nrow=100, ncol=length(coef(mle)))
+beta.resampled = matrix(mvrnorm(n=100, coef(mle), mle$Vp), nrow=100, ncol=length(coef(mle)))
 
 #Initialize structures to hold the parametric bootstrap estimates:
 smoothing.params = c(mle$sp)
@@ -87,14 +86,12 @@ for (i in 1:S) {
 lp = Xp %*% t(beta.resampled)
 
 #Write the draws of the linear predictors to disk:
-write(lp, file = paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
-    ncolumns = ncol(lp),
+write.table(lp, file = paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
     append = FALSE,
     sep = ",")
 
 #Write the parameters to disk:
 params = as.data.frame(list(s2, smoothing.params, theta))
-write(params, file = paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
-    ncolumns = ncol(3),
+write.table(params, file = paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
     append = FALSE,
     sep = ",")
