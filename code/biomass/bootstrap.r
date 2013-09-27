@@ -9,7 +9,7 @@ library(tweedie)
 cat(paste("running for: ", taxon, '\n', sep=''))
 
 #Modeling constants:
-knots = 250
+knots = 350
 powertol = 0.02
 
 #################################################################
@@ -24,7 +24,7 @@ modeldata = as.data.frame(modeldata)
 powertune = function(theta, data, k=150) {
     #Make the model and export it (so we dont have to reproduce it after optimization)
     model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
-    assign('model.out', model, envir=.GlobalEnvironment)
+    assign('model.out', model, envir=.GlobalEnv)
 
 	#Get the scale and the location
 	scale <- sqrt(abs(resid(model, type='deviance')))
