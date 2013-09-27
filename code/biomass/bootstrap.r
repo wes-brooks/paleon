@@ -1,9 +1,9 @@
 library(MASS)
 library(mgcv)
 library(nlme)
-#library(statmod, lib.loc='R-libs')
-#library(tweedie, lib.loc='R-libs')
-library(tweedie)
+library(statmod, lib.loc='R-libs')
+library(tweedie, lib.loc='R-libs')
+#library(tweedie)
 
 #sink(paste("output/", taxon, "-log.txt", sep=""))
 cat(paste("running for: ", taxon, '\n', sep=''))
