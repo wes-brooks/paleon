@@ -9,7 +9,7 @@ Biomass is a positive, continuous quantity. It can be exactly zero where there a
 We're going to use a generalized additive model (GAM) with the sole prdictor being a smooth on spatial location. R-INLA would be a great way to model biomass in a Bayesian context with the linear predictor being a GMRF, but there is no Tweedie likelihood available for R-INLA, and adding one turns out to be difficult (due to Rue's choice of C compiler).
 
 ###Fitting the GAM
-There is not a generally agreed-upon method of estimating the Tweedie distribution's ``power" parameter, p. But note that the Tweedie family is a type of ``Exponential dispersion model", meaning that the ``variance function" relating the variance to the expected value can be written $$Ey = \\mu$$, $$\\var{y} = \\phi \\mu^{\\theta}$$ where $$\\theta$$ is the power parameter and $$\\phi$$ is the dispersion parameter.
+There is not a generally agreed-upon method of estimating the Tweedie distribution's ""power" parameter, p. But note that the Tweedie family is a type of ""Exponential dispersion model", meaning that the ``variance function" relating the variance to the expected value can be written $$Ey = \\mu$$, $$\\var{y} = \\phi \\mu^{\\theta}$$ where $$\\theta$$ is the power parameter and $$\\phi$$ is the dispersion parameter.
 
 ###Dividing biomass between taxa
 There is concern that the variance of a sum of biomasses, modeled for individual taxa, would be greater than the variance of a singel model for total biomass. I think this concern is backward, since e.g. $$x**2 + y**2 + z**2 < (x + y + z)**2$$. In any case, the plan is to make a total biomass model and divvy the total fitted biomass between the taxa based on draws from the biomass models for individual taxa.
