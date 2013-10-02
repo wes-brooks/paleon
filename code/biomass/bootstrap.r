@@ -9,7 +9,7 @@ library(tweedie, lib.loc='R-libs')
 cat(paste("running for: ", taxon, '\n', sep=''))
 
 #Modeling constants:
-knots = 350
+knots = 500
 powertol = 0.02
 
 #################################################################
