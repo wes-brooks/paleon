@@ -54,7 +54,7 @@ beta.resampled = matrix(mvrnorm(n=100, coef(mle), mle$Vp), nrow=100, ncol=length
 
 #Evaluate the linear predictors for each draw of the coefficients and write to disk:
 lp = Xp %*% t(beta.resampled)
-write.table(lp, file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
+write.table(t(lp), file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
 lp = NULL
 beta.resampled = NULL
@@ -86,7 +86,7 @@ for (i in 1:S) {
     
     #Evaluate the linear predictors for each draw of the coefficients and write to disk:
     lp = Xp %*% t(beta.resampled)
-    write.table(lp, file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
+    write.table(t(lp), file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
         append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
     lp = NULL
     beta.resampled = NULL
