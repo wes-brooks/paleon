@@ -1,9 +1,9 @@
 #PalEON biomass modeling
+###Biomass data
+From the survey data, Simon has calculated the "observed" biomass for each grid cell. Biomass is calculated from the measurements made at ninety-ish corner points within the grid cell. Thus, the biomass calculation reflects the state of affairs at the corner points, which are imperfect as indicators of the biomass across the whole grid cell.
 
-###Why model the biomass?
-From the survey data, Simon has calculated the "observed" biomass for each grid cell. The biomass is calculated from the measurements made at ninety-ish corner points per grid cell. Thus, the biomass calculation reflects the state of affairs at the corner points, which are imperfect as indicators of the biomass across the whole grid cell.
-
-We therefore seek a model that reflects the distribution of biomass on each grid cell. Because the distribution of biomass varys across the upper midwest and because nearby grid cells are expected to be more similar than distant ones, we will produce a spatial smooth of the biomass.
+###Overview
+We seek a model that reflects the distribution of biomass on each grid cell. Because the distribution of biomass varys across the upper midwest and because nearby grid cells are expected to be more similar than distant ones, we will produce a spatial smooth of the biomass.
 
 In particular, we will try using a generalized additive model (GAM) to fit the spatial smooth. The covariates over which the GAM is to smooth the biomass are the latitude and longitude.
 
