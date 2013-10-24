@@ -2,3 +2,16 @@
 output/*
 *.Rapp.history
 .Rapp.history
+
+writeup/*/*.aux
+writeup/*/*.log
+writeup/*/*.nav
+writeup/*/*.out
+writeup/*/*.snm
+writeup/*/*.toc
+writeup/*/*.bbl
+writeup/*/*.blg
+writeup/*/*.fff
+writeup/*/*.spl
+writeup/*/*.ttt
+writeup/*/*.synctex.gz

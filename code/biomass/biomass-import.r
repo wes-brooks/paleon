@@ -1,3 +1,12 @@
+#Required libraries:
+require(RCurl)
+require(devtools)
+#If the 'brooks' package isnt loaded then import it from github:
+if (!'package:brooks' %in% search()) {
+    install_github('wesesque/brooks')
+    require(brooks)
+}
+
 #Import the stem density, count, and standard deviation data
 composition <- load_https("https://raw.github.com/wesesque/paleon/master/data/glo.forest.composition_v1_3alb.csv")
 biomass <- load_https("https://raw.github.com/wesesque/paleon/master/data/biomass.tablev1_3alb.csv")
