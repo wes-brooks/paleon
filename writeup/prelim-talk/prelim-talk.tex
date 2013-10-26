@@ -100,6 +100,57 @@
 \note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
 \end{frame}
 
+
+\begin{frame}{Motivation}
+\subt{Take a look at some data}
+
+The data is non-negative with a long right tail, suggesting a log transformation or a gamma model.
+
+\begin{center}
+  \ig[width=0.55\textwidth]{../../figures/prelim-talk/raw-biomass-histogram}
+\end{center}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+\begin{frame}{Motivation}
+\subt{Take a look at some data}
+
+The data is the total tree biomass per grid cell from the Public Land Survey of the upper midwest.
+
+\begin{itemize}
+    \item Observations are at corner points (~90 per grid cell)
+    \item Want to know the actual biomass on the grid cell from these local samples
+    \item Goal is to calculate the total biomass of each taxon across the upper midwest
+    \item Many grid cells have zero observed biomass
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+
+\begin{frame}{Motivation}
+\subt{Take a look at some data}
+
+Want a model for which power-law variation (long right tail) and exact zeroes are handled naturally, not as an exception.
+
+\begin{itemize}
+    \item We use the Tweedie family of distribution
+    \item Tweedie distribution has a tuning parameter that slides smoothly from Poisson to Gamma distribution
+    \item Estimating that tuning parameter is difficult, and current state of the art is a priori specification
+    \item A better solution may be to estimate the parameter by matching the theoretical and observed mean-variance relationship.
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+
 %Example slide:
 %\begin{frame}{Title}
 %\subt{Tweedie distribution}
@@ -127,11 +178,11 @@
     \begin{align}
         f(y;\theta;\phi) = a(y,\phi) \exp \left[ \phi^{-1} \left\{ y\theta - \kappa(\theta) \right\} \right] \notag
     \end{align}
-  \item test:
-    \begin{align}
-          & \text{Since} & 2y &= 4x &  \notag\\
-          &              &  y &= x \notag
-    \end{align}
+  %\item test:
+  %  \begin{align}
+  %        & \text{Since} & 2y &= 4x &  \notag\\
+  %        &              &  y &= x \notag
+  %  \end{align}
 \end{itemize}
 
 \note{note}
@@ -144,7 +195,7 @@
 \bigskip
 
 \begin{itemize}
-  \item Exponential dispersion model:
+  \item Tweedie model's parameters:
     \begin{align}
         \lambda &= \frac{\mu^(2-p)}{\phi (2-p)} \notag \\
         \alpha &= \frac{2-p}{1-p} \notag \\
@@ -178,25 +229,26 @@
 
 
 
-\begin{frame}{Title}
-\subt{Tweedie distribution}
-\bigskip
+%\begin{frame}{Title}
+%\subt{Tweedie distribution}
+%\bigskip
+%
+%
+%
+%\begin{itemize}
+%  \item test:
+%    \begin{align}
+%        a(y,\phi) &= y^{-1} W(y,\phi, p) \notag \\
+%        W_j &= \frac{y^{j\alpha}(p-1)^{j\alpha}}{\phi^{j(1-\alpha)}(2-p)^j j! %\Gamma(-j\alpha)} \notag
+%    \end{align}
+%\end{itemize}
+%
+%\note{note}
+%\end{frame}
 
-\begin{itemize}
-  \item test:
-    \begin{align}
-        a(y,\phi) &= y^{-1} W(y,\phi, p) \notag \\
-        W_j &= \frac{y^{j\alpha}(p-1)^{j\alpha}}{\phi^{j(1-\alpha)}(2-p)^j j! \Gamma(-j\alpha)} \notag
-    \end{align}
-\end{itemize}
-
-\note{note}
-\end{frame}
 
 
 
-
-7
 
 \begin{frame}[allowframebreaks]
 \frametitle{References}
