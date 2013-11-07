@@ -112,9 +112,11 @@
 
 
 
+\section{Motivation}
+
 
 \begin{frame}{Motivation}
-\subt{Take a look at some data}
+\subt{A look at the data}
 
 \begin{center}
   \ig[width=\textwidth]{../../figures/prelim-talk/raw-biomass}
@@ -124,8 +126,11 @@
 \end{frame}
 
 
+
+
+
 \begin{frame}{Motivation}
-\subt{Take a look at some data}
+\subt{A look at the data}
 
 The data is non-negative with a long right tail, suggesting a log transformation or a gamma model.
 
@@ -139,7 +144,7 @@ The data is non-negative with a long right tail, suggesting a log transformation
 
 
 \begin{frame}{Motivation}
-\subt{Take a look at some data}
+\subt{A look at the data}
 
 The data is the total tree biomass per grid cell from the Public Land Survey of the upper midwest.
 
@@ -156,16 +161,34 @@ The data is the total tree biomass per grid cell from the Public Land Survey of 
 
 
 
+
+\section{Our approach}
+
 \begin{frame}{Motivation}
-\subt{Take a look at some data}
+\subt{Recall our approach}
 
 Want a model for which power-law variation (long right tail) and exact zeroes are handled naturally, not as an exception.
 
 \begin{itemize}
     \item We use the Tweedie family of distribution
     \item Tweedie distribution has a tuning parameter that slides smoothly from Poisson to Gamma distribution
-    \item Estimating that tuning parameter is difficult, and current state of the art is a priori specification
-    \item A better solution may be to estimate the parameter by matching the theoretical and observed mean-variance relationship.
+    \item Estimate that tuning parameter via MLE
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+\begin{comment}
+
+\begin{frame}{Motivation}
+\subt{Recall our approach}
+
+Use a Generalized Additive Model (GAM) to smooth the biomass data
+
+\begin{itemize}
+    \item 
 \end{itemize}
 
 \note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
@@ -174,8 +197,144 @@ Want a model for which power-law variation (long right tail) and exact zeroes ar
 
 
 
+\section{Simulation}
+
+\begin{frame}{Simulation}
+\subt{Setup}
+
+Run 200 repetitions of this simulation:
+\begin{itemize}
+  \item $X_i \sim $N($0,1$), $i=1,\dots,100$
+  \item $\beta = 1$
+  \item $\nu = X \beta$
+  \item $y \sim $Tweedie($\mu=\exp\left\{\nu\right\}, \theta=1.5$)
+  \item Compare $\hat{\theta}$ from two methods:
+  \begin{itemize}
+    \item MLE
+    \item Mean-variance matching
+  \end{itemize}
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
 
 
+
+\begin{frame}{Simulation}
+\subt{Response data}
+
+\begin{center}
+\ig[width=0.6\textwidth]{../../figures/Nov-conference-call/sim-y}
+\end{center}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+\begin{frame}{Simulation}
+\subt{Results for MLE}
+
+\begin{center}
+\ig[width=0.6\textwidth]{../../figures/Nov-conference-call/sim-mle}
+\end{center}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+\begin{frame}{Simulation}
+\subt{Results for mean-variance matching}
+
+\begin{center}
+\ig[width=0.6\textwidth]{../../figures/Nov-conference-call/sim-mean-var}
+\end{center}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+\end{comment}
+
+
+
+\section{Biomass data}
+
+\begin{frame}{Biomass data}
+\subt{Drawing biomass samples}
+
+\begin{itemize}
+  \item Create a model for each taxon
+  \item Use MLE matching to estimate $\hat{\theta}$
+  \item Use parametric bootstrap to get draws from biomass
+  \item distribute draws from the ``total" taxon based on the relative biomass of the other taxa
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+\begin{frame}{Biomass data}
+\subt{Complications}
+
+\begin{itemize}
+  \item Smoothing biomass via a GAM for Wisconsin with 500 knots:
+  \begin{itemize}
+    \item Too few knots
+    \item Takes too long to complete (some taxa never finished running)
+  \end{itemize}
+  \item Possible solution: adapt R-INLA for Tweedie likelihood
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+\begin{frame}{Biomass data}
+\subt{Complications}
+
+\begin{itemize}
+  \item Incomplete taxa:
+  \begin{itemize}
+    \item Cherries 
+    \item Willow
+    \item Walnuts
+    \item Hickory
+    \item Fir
+    \item Spruce
+    \item Cedar
+    \item Hemlock
+    \item Pine
+    \item Birches
+  \end{itemize}
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+
+\begin{frame}{Biomass data}
+\subt{Complications}
+
+\begin{itemize}
+  \item Complete taxa:
+  \begin{itemize}
+    \item tot
+    \item Beech
+    \item Ironwoods
+    \item Basswood
+    \item Ashes
+    \item Elms
+    \item Poplar
+    \item Tamarack
+    \item Maple
+    \item Oaks
+  \end{itemize}
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
 
 
 %Example slide:
