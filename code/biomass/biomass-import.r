@@ -1,6 +1,7 @@
 #Required libraries:
 require(RCurl)
 require(devtools)
+
 #If the 'brooks' package isnt loaded then import it from github:
 if (!'package:brooks' %in% search()) {
     install_github('wesesque/brooks')

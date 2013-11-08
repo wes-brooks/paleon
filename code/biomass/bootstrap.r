@@ -36,8 +36,20 @@ powertune = function(theta, data, k=150) {
 	return(abs(coef(m)[2]))
 }
 
+#MLE of theta:
+powertune2 = function(theta, data, k=150) {
+    #Make the model and export it (so we dont have to reproduce it after optimization)
+    model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
+    assign('model.out', model, envir=.GlobalEnv)
+
+    ll = -logLik(model)[1]
+    cat(paste("Tuning. theta: ", round(theta, 3), ", -logLik: ", round(ll,3), "\n", sep=''))
+	return(ll)
+}
+
+
 #Locate the optimal theta. The optimization also exports the optimal model as object 'model.out'
-tuning = optimize(powertune, interval=c(1,2), data=modeldata, k=knots, tol=powertol)
+tuning = optimize(powertune2, interval=c(1,2), data=modeldata, k=knots, tol=powertol)
 cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))
 mle <- model.out
 
@@ -72,7 +84,7 @@ for (i in 1:S) {
     data.boot$biomass = y
 
     #Tune the model on the regenerated data
-    tuning.boot = optimize(powertune, interval=c(1,2), data=data.boot, k=knots, tol=powertol)
+    tuning.boot = optimize(powertune2, interval=c(1,2), data=data.boot, k=knots, tol=powertol)
     sp.boot = model.out$sp
     theta.boot = tuning.boot$minimum
     
