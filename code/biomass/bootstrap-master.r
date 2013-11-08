@@ -2,7 +2,7 @@ library(RCurl)
 library(devtools)
 
 #These functions import code and data directly from the github servers:
-source("../brooks/code/load_https.r")
+source("../brooks/R/load_https.r")
 
 #Import the data and the heatmap code.
 source_url("https://raw.github.com/wesesque/paleon/master/code/biomass-import.r")
