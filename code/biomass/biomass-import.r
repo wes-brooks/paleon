@@ -52,3 +52,8 @@ indx = which( outer(biomass.wi$x, stemdens$x, "==") &
        outer(biomass.wi$y, stemdens$y, "=="), 
        arr.ind=TRUE)
 stemdens.wi = stemdens[indx[,2],]
+
+
+#Make sure changes are reflected in the global environment:
+assign('biomass', biomass, envir=.GlobalEnv)
+assign('biomass.wi', biomass.wi, envir=.GlobalEnv)
