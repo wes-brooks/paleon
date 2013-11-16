@@ -37,7 +37,7 @@ softwood = c("Tamarack", "Pine", "Fir", "Cedar", "Spruce", "Hemlock")
 biomass$hardwood = rowSums(biomass[,hardwood])
 biomass$softwood = rowSums(biomass[,softwood])
 
-biomass.wi$hardwood = rowSums(biomass.wi[,hardwood])
+biomass.wi$hardwood = rowSums(biomass.wi[,hardwood[-which(hardwood=='Buckeye')]])
 biomass.wi$softwood = rowSums(biomass.wi[,softwood])
 
 
