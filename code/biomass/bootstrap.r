@@ -5,12 +5,12 @@ library(nlme)
 #library(tweedie, lib.loc='R-libs')
 library(tweedie)
 
-#sink(paste("output/", taxon, "-log.txt", sep=""))
-cat(paste("running for: ", taxon, '\n', sep=''))
-
 #Modeling constants:
 knots = 500
 powertol = 0.02
+
+#sink(paste("output/", taxon, "-log.txt", sep=""))
+cat(paste("running for: ", taxon, '\n', sep=''))
 
 #################################################################
 #Modeling - Tweedie one-stage
@@ -38,7 +38,7 @@ powertune = function(theta, data, k=150) {
 
 #MLE of theta:
 powertune2 = function(theta, data, k=150) {
-    cat(paste("Tuning. theta: ", round(theta, 3), sep=''))
+    cat(paste("Tuning. knots=", k, "; theta: ", round(theta, 3), sep=''))
     
     #Make the model and export it (so we dont have to reproduce it after optimization)
     model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
