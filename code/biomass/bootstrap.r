@@ -9,8 +9,9 @@ library(tweedie)
 knots = 500
 powertol = 0.02
 
-#sink(paste("output/", taxon, "-log.txt", sep=""))
+sink(paste("output/", taxon, "-log.txt", sep=""), append=FALSE)
 cat(paste("running for: ", taxon, '\n', sep=''))
+sink()
 
 #################################################################
 #Modeling - Tweedie one-stage
@@ -19,22 +20,6 @@ cat(paste("running for: ", taxon, '\n', sep=''))
 dataset = biomass.wi
 modeldata = list(biomass=dataset[,taxon], x=dataset[,'x'], y=dataset[,'y'])
 modeldata = as.data.frame(modeldata)
-
-#Function to set the optimial Tweedie theta:
-powertune = function(theta, data, k=150) {
-    #Make the model and export it (so we dont have to reproduce it after optimization)
-    model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
-    assign('model.out', model, envir=.GlobalEnv)
-
-	#Get the scale and the location
-	scale <- sqrt(abs(resid(model, type='deviance')))
-	loc <- predict(model, type='link')
-
-    #We are looking for the power parameter that gives us zero slope for the scale-location plot:
-	m = lm(scale~loc)
-    cat(paste("Tuning. theta: ", round(theta, 3), ", slope: ", round(abs(coef(m)[2]),4), '\n', sep=''))
-	return(abs(coef(m)[2]))
-}
 
 #MLE of theta:
 powertune2 = function(theta, data, k=150) {
@@ -51,9 +36,14 @@ powertune2 = function(theta, data, k=150) {
 
 
 #Locate the optimal theta. The optimization also exports the optimal model as object 'model.out'
+sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
 tuning = optimize(powertune2, interval=c(1,2), data=modeldata, k=knots, tol=powertol)
 cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))
 mle <- model.out
+
+#Write the analysis of knots to disk:
+print(mgcv:::k.check(mle))
+sink()
 
 ###################
 #Draw from the "posterior" distribution of biomass:
@@ -79,13 +69,14 @@ theta = c(tuning$minimum)
 s2 = c(mle$sig2)
 
 #Resample from the model (this is the parametric bootstrap):
-S = 9
+S = 19
 for (i in 1:S) {
     #Regenerate the output via the parametric model:
     y = rtweedie(nrow(modeldata), mu=fit, phi=mle$sig2, power=tuning$minimum)
     data.boot$biomass = y
 
     #Tune the model on the regenerated data
+    sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
     tuning.boot = optimize(powertune2, interval=c(1,2), data=data.boot, k=knots, tol=powertol)
     sp.boot = model.out$sp
     theta.boot = tuning.boot$minimum
@@ -94,7 +85,9 @@ for (i in 1:S) {
     m.boot = gam(biomass~s(x,y,k=knots), data=modeldata,
             gamma=1.4, sp=sp.boot,
             family=Tweedie(p=theta.boot, link='log'))
-
+    print(mgcv:::k.check(m.boot))
+    sink()
+    
     #Draw a bunch of spline coefficients from this estimate of their distribution:
     beta.resampled = mvrnorm(n=100, coef(m.boot), m.boot$Vp)
     
