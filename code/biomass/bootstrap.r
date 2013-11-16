@@ -38,12 +38,14 @@ powertune = function(theta, data, k=150) {
 
 #MLE of theta:
 powertune2 = function(theta, data, k=150) {
+    cat(paste("Tuning. theta: ", round(theta, 3), sep=''))
+    
     #Make the model and export it (so we dont have to reproduce it after optimization)
     model = gam(biomass~s(x,y,k=k), data=data, gamma=1.4, family=Tweedie(p=theta, link='log'))
     assign('model.out', model, envir=.GlobalEnv)
 
     ll = -logLik(model)[1]
-    cat(paste("Tuning. theta: ", round(theta, 3), ", -logLik: ", round(ll,3), "\n", sep=''))
+    cat(paste("; -logLik: ", round(ll,3), "\n", sep=''))
 	return(ll)
 }
 
