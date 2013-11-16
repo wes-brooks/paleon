@@ -30,6 +30,17 @@ p2 = ncol(biomass)
 biomass$tot = apply(biomass[,4:p2], 1, sum)
 biomass = biomass[which(!is.na(biomass$tot)),]
 
+#Divide into hardwoods and softwoods:
+hardwood = c("Ashes", "Birches", "Elms", "Maple", "Poplar", "Basswood", "Oaks", "Willow", "Alder", "Ironwoods", "Walnuts", "Hickory", "Beech", "Celtis", "Cherries", "Juniper", "Rose.Trees", "Sycamore", "Hardwood.undif", "Water", "Cornus", "Buckeye")
+softwood = c("Tamarack", "Pine", "Fir", "Cedar", "Spruce", "Hemlock")
+
+biomass$hardwood = rowSums(biomass[,hardwood])
+biomass$softwood = rowSums(biomass[,softwood])
+
+biomass.wi$hardwood = rowSums(biomass[,hardwood])
+biomass.wi$softwood = rowSums(biomass[,softwood])
+
+
 #Extract the WI composition data
 indx = which( outer(biomass.wi$x, composition$x, "==") & 
        outer(biomass.wi$y, composition$y, "=="), 
