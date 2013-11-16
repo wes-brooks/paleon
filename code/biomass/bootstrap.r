@@ -9,6 +9,10 @@ library(tweedie)
 knots = 500
 powertol = 0.02
 
+#Initiate timing:
+ptm = proc.time()
+
+#Write to output:
 sink(paste("output/", taxon, "-log.txt", sep=""), append=FALSE)
 cat(paste("running for: ", taxon, '\n', sep=''))
 sink()
@@ -108,3 +112,8 @@ for (i in 1:S) {
 params = as.data.frame(list(s2, smoothing.params, theta))
 write.table(params, file=paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
+
+#Finaize timing:
+sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+print(proc.time() - ptm)
+sink()
