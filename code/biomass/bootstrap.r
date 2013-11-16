@@ -10,7 +10,7 @@ knots = 500
 powertol = 0.02
 
 #Initiate timing:
-ptm = proc.time()
+ptm.tot = proc.time()
 
 #Write to output:
 sink(paste("output/", taxon, "-log.txt", sep=""), append=FALSE)
@@ -37,7 +37,8 @@ powertune2 = function(theta, data, k=150) {
     cat(paste("; -logLik: ", round(ll,3), "\n", sep=''))
 	return(ll)
 }
-
+#Initialize timing for this iteration:
+ptm = proc.time()
 
 #Locate the optimal theta. The optimization also exports the optimal model as object 'model.out'
 sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
@@ -47,6 +48,11 @@ mle <- model.out
 
 #Write the analysis of knots to disk:
 print(mgcv:::k.check(mle))
+sink()
+
+#Finalize timing for this iteration:
+sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+print(proc.time() - ptm)
 sink()
 
 ###################
@@ -75,6 +81,9 @@ s2 = c(mle$sig2)
 #Resample from the model (this is the parametric bootstrap):
 S = 19
 for (i in 1:S) {
+    #Initialize timing for this iteration:
+    ptm = proc.time()
+
     #Regenerate the output via the parametric model:
     y = rtweedie(nrow(modeldata), mu=fit, phi=mle$sig2, power=tuning$minimum)
     data.boot$biomass = y
@@ -106,6 +115,11 @@ for (i in 1:S) {
     s2 = c(s2, m.boot$sig2)
     smoothing.params = c(smoothing.params, sp.boot)
     theta = c(theta, theta.boot)
+    
+    #Finalize timing for this iteration:
+    sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+    print(proc.time() - ptm)
+    sink()
 }
 
 #Write the parameters to disk:
@@ -113,7 +127,7 @@ params = as.data.frame(list(s2, smoothing.params, theta))
 write.table(params, file=paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
 
-#Finaize timing:
+#Finalize timing:
 sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
-print(proc.time() - ptm)
+print(proc.time() - ptm.tot)
 sink()
