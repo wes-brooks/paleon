@@ -6,9 +6,14 @@ require(bitops, lib.loc='R-libs')
 require(RCurl, lib.loc='R-libs')
 require(devtools, lib.loc='R-libs')
 
+#prerequisites for the brooks package
+require(plotrix, lib.loc='R-libs')
+require(ggplot2, lib.loc='R-libs')
+require(RColorBrewer, lib.loc='R-libs')
+require(xtable, lib.loc='R-libs')
 #If the 'brooks' package isnt loaded then import it from github:
 if (!'package:brooks' %in% search()) {
-    install_github('brooks', 'wesesque')
+    install_github('brooks', 'wesesque', quick=TRUE)
     require(brooks)
 }
 
