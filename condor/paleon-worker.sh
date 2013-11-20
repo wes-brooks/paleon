@@ -2,7 +2,6 @@ if [ -f /usr/bin/R ]
 then
 	mkdir output
     Rscript code/biomass/bootstrap-master.r $*
-
 	exit 0
 else 
          exit 1

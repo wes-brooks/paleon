@@ -6,7 +6,7 @@ library(nlme)
 library(tweedie)
 
 #Modeling constants:
-knots = 500
+knots = 5000
 powertol = 0.02
 
 #Initiate timing:
@@ -21,7 +21,7 @@ sink()
 #Modeling - Tweedie one-stage
 #################################################################
 #Set up the data, including mean composition within the first-order neighborhood:
-dataset = biomass.wi
+dataset = biomass
 modeldata = list(biomass=dataset[,taxon], x=dataset[,'x'], y=dataset[,'y'])
 modeldata = as.data.frame(modeldata)
 
