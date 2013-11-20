@@ -17,7 +17,7 @@ arguments = $(Cluster) $(Process)
 requirements = (Target.OpSys=="LINUX" && Target.Arch=="X86_64"  && regexp("stat", Machine))
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT_OR_EVICT
-transfer_input_files = code, R-libs, condor
+transfer_input_files = code, data, R-libs, condor
 transfer_output_files = output
 notification = Never
 on_exit_remove = (ExitBySignal == False) && (ExitCode == 0)
