@@ -1,4 +1,4 @@
-librrequireary(MASS)
+require(MASS)
 require(mgcv)
 require(nlme)
 require(statmod, lib.loc='R-libs')
