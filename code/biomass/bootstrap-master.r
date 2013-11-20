@@ -1,5 +1,7 @@
-require(RCurl)
-require(devtools)
+require(RCurl, lib.loc='R-libs')
+require(devtools, lib.loc='R-libs')
+#require(RCurl)
+#require(devtools)
 
 #Import the data and the heatmap code.
 source_url("https://raw.github.com/wesesque/paleon/master/code/biomass/biomass-import.r")

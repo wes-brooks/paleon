@@ -1,6 +1,8 @@
 #Required libraries:
-require(RCurl)
-require(devtools)
+#require(RCurl)
+#require(devtools)
+require(RCurl, lib.loc='R-libs')
+require(devtools, lib.loc='R-libs')
 
 #If the 'brooks' package isnt loaded then import it from github:
 if (!'package:brooks' %in% search()) {
