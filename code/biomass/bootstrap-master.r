@@ -1,3 +1,4 @@
+require(evaluate, lib.loc='R-libs')
 require(bitops, lib.loc='R-libs')
 require(RCurl, lib.loc='R-libs')
 require(devtools, lib.loc='R-libs')
