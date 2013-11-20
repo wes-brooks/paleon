@@ -9,9 +9,9 @@
 #################################################################
 
 universe = vanilla
-log = logs/log_$(Cluster)_$(Process).log
-error = logs/err_$(Cluster)_$(Process).err
-output = logs/out_$(Cluster)_$(Process).out
+log = condor/logs/log_$(Cluster)_$(Process).log
+error = condor/logs/err_$(Cluster)_$(Process).err
+output = condor/logs/out_$(Cluster)_$(Process).out
 executable = condor/paleon-worker.sh
 arguments = $(Cluster) $(Process)
 requirements = (Target.OpSys=="LINUX" && Target.Arch=="X86_64"  && regexp("stat", Machine))
