@@ -6,22 +6,16 @@ require(bitops, lib.loc='R-libs')
 require(RCurl, lib.loc='R-libs')
 require(devtools, lib.loc='R-libs')
 
-#prerequisites for the brooks package
-require(plotrix, lib.loc='R-libs')
-require(gtable, lib.loc='R-libs')
-require(proto, lib.loc='R-libs')
-require(colorspace, lib.loc='R-libs')
-require(plyr, lib.loc='R-libs')
-require(reshape2, lib.loc='R-libs')
-require(scales, lib.loc='R-libs')
-require(ggplot2, lib.loc='R-libs')
-require(RColorBrewer, lib.loc='R-libs')
-require(xtable, lib.loc='R-libs')
-#If the 'brooks' package isnt loaded then import it from github:
-if (!'package:brooks' %in% search()) {
-    install_github('brooks', 'wesesque', quick=TRUE)
-    require(brooks)
+load_https <- function(url, sep=',', header=TRUE, row.names=NULL, ...) {
+  # load package
+  require(RCurl)
+ 
+  # Import the data:
+  read.table(text = getURL(url,
+    followlocation=TRUE, cainfo=system.file("CurlSSL", "cacert.pem", package="RCurl")),
+    sep=sep, header=header, row.names=row.names, ...)
 }
+
 
 #Import the stem density, count, and standard deviation data
 composition <- load_https("https://raw.github.com/wesesque/paleon/master/data/glo.forest.composition_v1_3alb.csv")
