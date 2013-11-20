@@ -1,9 +1,9 @@
-library(MASS)
-library(mgcv)
-library(nlme)
+librrequireary(MASS)
+require(mgcv)
+require(nlme)
 #library(statmod, lib.loc='R-libs')
 #library(tweedie, lib.loc='R-libs')
-library(tweedie)
+require(tweedie)
 
 #Modeling constants:
 knots = 5000
