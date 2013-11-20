@@ -8,6 +8,11 @@ require(devtools, lib.loc='R-libs')
 
 #prerequisites for the brooks package
 require(plotrix, lib.loc='R-libs')
+require(gtable, lib.loc='R-libs')
+require(proto, lib.loc='R-libs')
+require(plyr, lib.loc='R-libs')
+require(reshape2, lib.loc='R-libs')
+require(scales, lib.loc='R-libs')
 require(ggplot2, lib.loc='R-libs')
 require(RColorBrewer, lib.loc='R-libs')
 require(xtable, lib.loc='R-libs')
