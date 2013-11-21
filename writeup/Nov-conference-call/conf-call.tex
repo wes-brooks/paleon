@@ -112,6 +112,25 @@
 
 
 
+\begin{frame}{Motivation}
+\subt{A look at the data}
+
+The data is the total tree biomass per grid cell from the Public Land Survey of the upper midwest.
+
+\begin{itemize}
+    \item Observations are at corner points (~90 per grid cell)
+    \item Want to know the actual biomass on the grid cell from these local samples
+    \item Goal is to calculate the total biomass of each taxon across the upper midwest
+    \item Many grid cells have zero observed biomass
+\end{itemize}
+
+\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
+\end{frame}
+
+
+
+
+
 \section{Motivation}
 
 
@@ -143,28 +162,12 @@ The data is non-negative with a long right tail, suggesting a log transformation
 
 
 
-\begin{frame}{Motivation}
-\subt{A look at the data}
-
-The data is the total tree biomass per grid cell from the Public Land Survey of the upper midwest.
-
-\begin{itemize}
-    \item Observations are at corner points (~90 per grid cell)
-    \item Want to know the actual biomass on the grid cell from these local samples
-    \item Goal is to calculate the total biomass of each taxon across the upper midwest
-    \item Many grid cells have zero observed biomass
-\end{itemize}
-
-\note{The biomass is observed at corner points within each grid cell. We'd like to estimate the underlying distribution of biomass. Observed biomass was exactly zero in some grid cells, and the smoothed model should accomodate that.}
-\end{frame}
-
-
 
 
 
 \section{Our approach}
 
-\begin{frame}{Motivation}
+\begin{frame}{Background}
 \subt{Recall our approach}
 
 Want a model for which power-law variation (long right tail) and exact zeroes are handled naturally, not as an exception.
