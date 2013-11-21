@@ -13,9 +13,9 @@ powertol = 0.02
 ptm.tot = proc.time()
 
 #Write to output:
-#sink(paste("output/", taxon, "-log.txt", sep=""), append=FALSE)
+sink(paste("output/", taxon, "-log.txt", sep=""), append=FALSE)
 cat(paste("running for: ", taxon, '\n', sep=''))
-#sink()
+sink()
 
 #################################################################
 #Modeling - Tweedie one-stage
@@ -41,19 +41,19 @@ powertune2 = function(theta, data, k=150) {
 ptm = proc.time()
 
 #Locate the optimal theta. The optimization also exports the optimal model as object 'model.out'
-#sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
 tuning = optimize(powertune2, interval=c(1,2), data=modeldata, k=knots, tol=powertol)
 cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))
 mle <- model.out
 
 #Write the analysis of knots to disk:
 print(mgcv:::k.check(mle))
-#sink()
+sink()
 
 #Finalize timing for this iteration:
-#sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
 print(proc.time() - ptm)
-#sink()
+sink()
 
 ###################
 #Draw from the "posterior" distribution of biomass:
@@ -89,7 +89,7 @@ for (i in 1:S) {
     data.boot$biomass = y
 
     #Tune the model on the regenerated data
-    #sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+    sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
     tuning.boot = optimize(powertune2, interval=c(1,2), data=data.boot, k=knots, tol=powertol)
     sp.boot = model.out$sp
     theta.boot = tuning.boot$minimum
@@ -99,7 +99,7 @@ for (i in 1:S) {
             gamma=1.4, sp=sp.boot,
             family=Tweedie(p=theta.boot, link='log'))
     print(mgcv:::k.check(m.boot))
-    #sink()
+    sink()
     
     #Draw a bunch of spline coefficients from this estimate of their distribution:
     beta.resampled = mvrnorm(n=100, coef(m.boot), m.boot$Vp)
@@ -117,9 +117,9 @@ for (i in 1:S) {
     theta = c(theta, theta.boot)
     
     #Finalize timing for this iteration:
-    #sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+    sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
     print(proc.time() - ptm)
-    #sink()
+    sink()
 }
 
 #Write the parameters to disk:
@@ -128,6 +128,6 @@ write.table(params, file=paste("output/params-", cluster, "-", taxon, ".csv", se
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
 
 #Finalize timing:
-#sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
 print(proc.time() - ptm.tot)
-#sink()
+sink()

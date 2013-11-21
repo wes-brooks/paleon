@@ -1,15 +1,8 @@
 #Required libraries:
-#require(RCurl)
-#require(devtools)
-require(evaluate, lib.loc='R-libs')
 require(bitops, lib.loc='R-libs')
 require(RCurl, lib.loc='R-libs')
-require(devtools, lib.loc='R-libs')
 
 load_https <- function(url, sep=',', header=TRUE, row.names=NULL, ...) {
-  # load package
-  require(RCurl)
- 
   # Import the data:
   read.table(text = getURL(url,
     followlocation=TRUE, cainfo=system.file("CurlSSL", "cacert.pem", package="RCurl")),
