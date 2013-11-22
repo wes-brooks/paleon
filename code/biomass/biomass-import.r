@@ -33,14 +33,14 @@ biomass$tot = apply(biomass[,4:p2], 1, sum)
 biomass = biomass[which(!is.na(biomass$tot)),]
 
 #Divide into hardwoods and softwoods:
-hardwood = c("Ashes", "Birches", "Elms", "Maple", "Poplar", "Basswood", "Oaks", "Willow", "Alder", "Ironwoods", "Walnuts", "Hickory", "Beech", "Celtis", "Cherries", "Juniper", "Rose.Trees", "Sycamore", "Hardwood.undif", "Water", "Cornus", "Buckeye")
-softwood = c("Tamarack", "Pine", "Fir", "Cedar", "Spruce", "Hemlock")
+hard = c("Ashes", "Birches", "Elms", "Maple", "Poplar", "Basswood", "Oaks", "Willow", "Alder", "Ironwoods", "Walnuts", "Hickory", "Beech", "Celtis", "Cherries", "Juniper", "Rose.Trees", "Sycamore", "Hardwood.undif", "Water", "Cornus", "Buckeye")
+soft = c("Tamarack", "Pine", "Fir", "Cedar", "Spruce", "Hemlock")
 
-biomass$hardwood = rowSums(biomass[,hardwood])
-biomass$softwood = rowSums(biomass[,softwood])
+biomass$hardwood = rowSums(biomass[,hard])
+biomass$softwood = rowSums(biomass[,soft])
 
-biomass.wi$hardwood = rowSums(biomass.wi[,hardwood[-which(hardwood=='Buckeye')]])
-biomass.wi$softwood = rowSums(biomass.wi[,softwood])
+biomass.wi$hardwood = rowSums(biomass.wi[,hard[-which(hard=='Buckeye')]])
+biomass.wi$softwood = rowSums(biomass.wi[,soft])
 
 
 #Extract the WI composition data

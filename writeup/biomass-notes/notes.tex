@@ -1,0 +1,71 @@
+\documentclass[authoryear, review, 11pt]{elsarticle}
+
+\setlength{\textwidth}{6.5in}
+%\setlength{\textheight}{9in}
+\setlength{\topmargin}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{bm}
+\usepackage{multirow}
+
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{natbib}
+\usepackage{verbatim}
+
+\usepackage{endfloat}
+
+\usepackage{relsize}
+\usepackage{caption}
+\usepackage{subcaption}
+%\usepackage{fullpage}
+\usepackage{booktabs}
+
+\newcommand{\ig}{\includegraphics}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\bw}{\mbox{bw}}
+\DeclareMathOperator*{\df}{\mbox{df}}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\E}{\mathop{\mathbb E}}
+
+
+% title info
+\title{Spatial smoothing of zero-inflated abundance data}
+%\subtitle{A researcher's perspective}
+\author{Wesley Brooks}
+
+
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Data for this project are estimates of per-taxon biomass based on the Public Land Survey.  The data are biomass estimates for each grid cell in each taxon. Each grid cell is observed at about 70 corner points.
+
+
+Our objective is a  model of the biomass of each species in each grid cell, where the only parameters used to calibrate the models are location and species composition. It is important to come up with an estimated probability that a given cell will have no biomass of a given species, and also to model the variance of the biomass estimate.\\
+
+
+\section{Data}
+
+
+
+
+
+\section{Models}
+There are two possible directions here: a two-stage hierarchical model, where in stage one we randomly decide whether a given cell has nonzero biomass, and then if so stage two randomly sets the biomass; alternatively, a single-stage model with zero-inflation, maybe one that could be tuned like a \verb!glm! (e.g. a Tweedie model).\\
+
+
+
+\end{document}
