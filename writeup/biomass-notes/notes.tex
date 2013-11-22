@@ -1,42 +1,21 @@
 \documentclass[authoryear, review, 11pt]{elsarticle}
 
-\setlength{\textwidth}{6.5in}
-%\setlength{\textheight}{9in}
-\setlength{\topmargin}{0in}
-\setlength{\oddsidemargin}{0in}
-\setlength{\evensidemargin}{0in}
-
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{mathabx}
 \usepackage{bm}
-\usepackage{multirow}
 
 %\geometry{landscape}                % Activate for for rotated page geometry
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
 \usepackage{epstopdf}
-\usepackage{natbib}
 \usepackage{verbatim}
 
-\usepackage{endfloat}
-
-\usepackage{relsize}
-\usepackage{caption}
-\usepackage{subcaption}
-%\usepackage{fullpage}
-\usepackage{booktabs}
 
 \newcommand{\ig}{\includegraphics}
 
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-\DeclareMathOperator*{\argmin}{\arg\!\min}
-\DeclareMathOperator*{\argmax}{\arg\!\max}
-\DeclareMathOperator*{\bw}{\mbox{bw}}
-\DeclareMathOperator*{\df}{\mbox{df}}
-\newcommand{\vect}[1]{\bm{#1}}
-\newcommand{\E}{\mathop{\mathbb E}}
 
 
 % title info
@@ -45,51 +24,98 @@
 \author{Wesley Brooks}
 
 
+\usepackage{filecontents}
+
+\begin{filecontents}{notes.bib}
+@book{Wood-2006,
+title = {Generalized additive models: an introduction with R},
+author = {Wood, Simon},
+location = {Boca Raton},
+publisher = {Chapman and Hall},
+year = {2006},
+}
+\end{filecontents}
 
 
 \begin{document}
 \maketitle
 
 \section{Introduction}
-Data for this project are estimates of per-taxon biomass based on the Public Land Survey. The data are biomass estimates for each grid cell in each taxon. Each grid cell is observed at about 70 corner points.
+The biomass of several taxa of trees was estimated in each grid cell of the upper midwestern United States (Minnesota, Wisconsin, and part of Michigan) from the Public Land Survey. This work describes the model that was used to spatially smooth the biomass estimates in order to produce draws from an underlying distribution of the per-taxon biomass in each grid cell.
 
+In order to more quickly assess the model, it was fit to just the data from Wisconsin before being applied to the entire upper midwest. Also, because the model failed to converge for about half of the individual taxa, the decision was made to reduce the taxa to two categories: hardwoods and softwoods. The following taxa were summed in each grid cell to generate the observations of the softwood biomass:
+\begin{itemize}
+ \item Tamarack
+ \item Pine
+ \item Fir
+ \item Cedar
+ \item Spruce
+ \item Hemlock
+\end{itemize}
 
-Our objective is a  model of the biomass of each species in each grid cell, where the only parameters used to calibrate the models are location and species composition. It is important to come up with an estimated probability that a given cell will have no biomass of a given species, and also to model the variance of the biomass estimate.\\
-
-
-\section{Data}
-
-
-
+The following taxa were summed in each grid cell to generate the observations of the hardwood biomass:
+\begin{itemize}
+ \item Ashes
+ \item Birches
+ \item Elms
+ \item Maple
+ \item Poplar
+ \item Basswood
+ \item Oaks
+ \item Willow
+ \item Alder
+ \item Ironwoods
+ \item Walnuts
+ \item Hickory
+ \item Beech
+ \item Celtis
+ \item Cherries
+ \item Juniper
+ \item Rose trees
+ \item Sycamore
+ \item Cornus
+ \item Buckeye
+ \item Undifferentiated hardwood
+\end{itemize}
 
 
 \section{Models}
-The model for biomass is a Tweedie model, which can be thought of as a Poisson-Gamma mixture. That is, letting the response be $Y$,
+
+\subsection{Tweedie distribution}
+
+The model for biomass is a Tweedie model, which can be thought of as a Poisson-Gamma mixture. Let the response be $Y$ and E$Y$ = $\mu$. Now $Y$ is a sum of $N$ iid Gamma-distributed random variables $Z_1, \dots, Z_N$. The number, $N$, of iid Gamma random variables, has a Poisson distribution, which means it could be exactly zero. That is,
 \begin{align*}
     Y &= \sum\limits_{i=1}^N Z_i \\
     N &\sim \text{Poisson}(\lambda) \\
     Z_i &\sim \text{Gamma}(\alpha, \tau)
 \end{align*}
 
- $\theta \in (1,2)$:
+Two variables control the Poisson mean $\lambda$; a power parameter $\theta \in (1,2)$ and a dispersion parameter $\phi > 0$.
 \begin{align*}
-    \lambda &= \phi^{-1} \frac{\mu^{2-\theta}}{2-\theta} \\
+    \lambda &= \phi^{-1} \frac{\mu^{2-\theta}}{2-\theta}
+\end{align*}
+
+The parameters of the Gamma distribution are
+\begin{align*}
     \alpha &= \frac{2-\theta}{\theta-1} \\
     \tau &= \phi (\theta - 1) \mu^{\theta - 1}
 \end{align*}
 
-And, as usual for a generalized linear model, we define a link function, $g(\dot)$, that converts the fitted values $\hat{y}$ to the linear predictor $\eta$. In this case, the log link is used.
+And, as usual for a generalized linear model (GLM), we define a link function, $g(\dot)$, that converts the fitted values $\hat{y}$ to the linear predictor $\eta$. In this case, the log link is used.
 \begin{align*}
-    \eta(s) &= f\left(\bm{x}(s)\right) = g\left(\mu(s)\right)\\
-    \mu(s) &= g^{-1}\left(\eta(s)\right)
+    \eta &= g\left(\mu\right)
 \end{align*}
 
-Where $g(\cdot)$ is the link function, $\bm{x}(s)$ is the vector of covariates ($x$ and $y$ coordinates) at location $s$.
+\subsection{Generalized additive model}
+The model is fit to the data using a generalized additive model (GAM) that has the spatial coordinates $\bm{s} = (\text{lat}, \text{long})$ as its only covariates. The GAM for just the Wisconsin data used a spline smooth with 500 knots. 
 
+\subsection{Tuning the Tweedie power parameter}
+The Tweedie distribution is in the exponential family only when the power parameter $\theta$ is prespecified. The usual parameter estimation machinery for a GAM or GLM requires that the observations be from a distribution in the exponential family, so using the Tweedie distribution requires the power parameter to be estimated separately from the parameters of the GAM. In the model for biomass, R's \verb!optimize! function was used to find an estimate $\hat{\theta}$ that maximized the likelihood of the observed data.
 
-\section{Computation}
-The GAM was fit using 500 knots for Wisconsin. At 
+\subsection{Drawing from the model output}
+Having estimated the Tweedie power parameter and the parameters of the GAM, it is possible to make draws from the resulting model for biomass. However, the GAM's smoothing parameters and the Tweedie power parameter are estimated as points, without acknowledging uncertainty in those parameters. The parametric bootstrap was used to make draws from biomass that allow for uncertainty in the smoothing and power parameters.
 
+This application of the parametric bootstrap was modeled after section 5.4.2 of \cite{Wood-2006}, but that example is for a poisson distribution and does not require the estimation of a Tweedie power parameter. For the models of biomass, the power parameter and smoothing parameter were estimated jointly for each repetition of the bootstrap.
 
 
 \section{Results}
@@ -107,5 +133,9 @@ The GAM was fit using 500 knots for Wisconsin. At
 \end{centering}
 \end{figure}
 
+
+\section{Bibliography}
+\bibliographystyle{abbrv}
+\bibliography{notes}
 
 \end{document}

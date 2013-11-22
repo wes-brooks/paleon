@@ -6,7 +6,7 @@ require(tweedie, lib.loc='R-libs')
 #require(tweedie)
 
 #Modeling constants:
-knots = 2000
+knots = 1000
 powertol = 0.02
 
 #Initiate timing:
