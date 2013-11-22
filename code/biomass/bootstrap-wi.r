@@ -13,7 +13,7 @@ powertol = 0.02
 ptm.tot = proc.time()
 
 #Write to output:
-sink(paste("output/", taxon, "-log.txt", sep=""), append=FALSE)
+sink(paste("output/", taxon, "-wi-log.txt", sep=""), append=FALSE)
 cat(paste("running for: ", taxon, '\n', sep=''))
 sink()
 
@@ -41,7 +41,7 @@ powertune2 = function(theta, data, k=150) {
 ptm = proc.time()
 
 #Locate the optimal theta. The optimization also exports the optimal model as object 'model.out'
-sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+sink(paste("output/", taxon, "-wi-log.txt", sep=""), append=TRUE)
 tuning = optimize(powertune2, interval=c(1,2), data=modeldata, k=knots, tol=powertol)
 cat(paste("\ntheta: ", round(tuning$minimum, 3), ", slope: ", round(tuning$objective,4), '\n', sep=''))
 mle <- model.out
@@ -51,7 +51,7 @@ print(mgcv:::k.check(mle))
 sink()
 
 #Finalize timing for this iteration:
-sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+sink(paste("output/", taxon, "-wi-log.txt", sep=""), append=TRUE)
 print(proc.time() - ptm)
 sink()
 
@@ -68,7 +68,7 @@ beta.resampled = matrix(mvrnorm(n=100, coef(mle), mle$Vp), nrow=100, ncol=length
 
 #Evaluate the linear predictors for each draw of the coefficients and write to disk:
 lp = Xp %*% t(beta.resampled)
-write.table(t(lp), file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
+write.table(t(lp), file=paste("output/logbiomass-", cluster, "-", taxon, "-wi.csv", sep=""),
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
 lp = NULL
 beta.resampled = NULL
@@ -89,7 +89,7 @@ for (i in 1:S) {
     data.boot$biomass = y
 
     #Tune the model on the regenerated data
-    sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+    sink(paste("output/", taxon, "-wi-log.txt", sep=""), append=TRUE)
     tuning.boot = optimize(powertune2, interval=c(1,2), data=data.boot, k=knots, tol=powertol)
     sp.boot = model.out$sp
     theta.boot = tuning.boot$minimum
@@ -117,14 +117,14 @@ for (i in 1:S) {
     theta = c(theta, theta.boot)
     
     #Finalize timing for this iteration:
-    sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+    sink(paste("output/", taxon, "-wi-log.txt", sep=""), append=TRUE)
     print(proc.time() - ptm)
     sink()
 }
 
 #Write the parameters to disk:
 params = as.data.frame(list(s2, smoothing.params, theta))
-write.table(params, file=paste("output/params-", cluster, "-", taxon, ".csv", sep=""),
+write.table(params, file=paste("output/params-", cluster, "-", taxon, "-wi.csv", sep=""),
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
 
 #Finalize timing:
