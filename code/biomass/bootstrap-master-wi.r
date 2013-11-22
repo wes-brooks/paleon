@@ -14,4 +14,4 @@ cluster = as.numeric(args[1])
 indx = as.numeric(args[2]) + 1
 taxon = taxa[indx]
 
-source_url("https://raw.github.com/wesesque/paleon/master/code/biomass/bootstrap.r")
+source_url("https://raw.github.com/wesesque/paleon/master/code/biomass/bootstrap-wi.r")

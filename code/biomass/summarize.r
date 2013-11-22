@@ -31,13 +31,13 @@ rowSums(exp(softwood)) -> s
 rowSums(exp(hardwood)) -> h
 
 pdf("~/git/paleon/figures/biomass/hardwood-histogram.pdf", height=7, width=7)
-    hist(h, breaks=50, main="Histogram of total (smoothed)\nhardwood biomass in Wisconsin", xlab="biomass")
+    hist(h, breaks=50, xlab='biomass', main='') #, main="Histogram of total (smoothed)\nhardwood biomass in Wisconsin", xlab="biomass")
     abline(v=sum(biomass.wi$hardwood), col='red', lty=2, lwd=2)
 dev.off()
 
 
 pdf("~/git/paleon/figures/biomass/softwood-histogram.pdf", height=7, width=7)
-    hist(s, breaks=50, main="Histogram of total (smoothed)\nsoftwood biomass in Wisconsin", xlab="biomass")
+    hist(s, breaks=50, xlab='biomass', main='') #main="Histogram of total (smoothed)\nsoftwood biomass in Wisconsin", xlab="biomass")
     abline(v=sum(biomass.wi$softwood), col='red', lty=2, lwd=2)
 dev.off()
 
