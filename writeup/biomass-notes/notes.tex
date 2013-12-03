@@ -119,6 +119,10 @@ This application of the parametric bootstrap was modeled after section 5.4.2 of 
 
 
 \section{Results}
+Histograms of the total biomass as estimated by the models for hardwoods and softwoods are presented as Figure \ref{hardwood-hist} and \ref{softwood-hist}, respectively. Each histogram is based on 2000 draws of the biomass at each of the 2436 grid cells in Wisconsin. The values for each draw of the (log) biomass are in the files logbiomass-WI-hardwood.csv and logbiomass-WI-softwood.csv, respectively. The files are available on request (each is approximately 80MB).
+
+Producing the model draws for each category took approximately seven hours on the 'bigmem' servers at the University of Wisconsin-Madison's department of statistics. Scaling up to the upper midwest has been challenging - the first (iterative) step of fitting that model with 2000 knots took three hours before I killed the process (generating the draws requires a few hundred such steps). It is currently running with 1000 knots, which is probably insufficient to cover the area with acceptable detail.
+
 \begin{figure}
 \begin{centering}
 \ig[width=0.7\textwidth]{../../figures/biomass/hardwood-histogram}
