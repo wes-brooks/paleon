@@ -1,0 +1,2 @@
+\frametitle{Tuning the Tweedie power parameter}
+The Tweedie distribution is in the exponential family only when the power parameter $\theta$ is prespecified. The usual parameter estimation machinery for a GAM or GLM requires that the observations be from a distribution in the exponential family, so using the Tweedie distribution requires the power parameter to be estimated separately from the parameters of the GAM. In the model for biomass, R's \verb!optimize! function was used to find an estimate $\hat{\theta}$ that maximized the likelihood of the observed data.

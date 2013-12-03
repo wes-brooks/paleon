@@ -11,19 +11,28 @@ if (!'package:brooks' %in% search()) {
 source_url("https://raw.github.com/wesesque/paleon/master/code/biomass/biomass-import.r")
 
 
-#Map of biomass:
-p = ggplot(biomass) +
-    aes(x,y) +
-    aes(color=tot) +
-    scale_color_gradient("biomass (1000s)", trans='log', low='white', high='blue',
-        breaks=c(2, 150, 8100, 442400),
-        labels=c("0.002", "0.150", "8.100", "442.4")) +
-    geom_point() +
-    ggtitle("Total tree biomass")
+#Maps of raw biomass:
+plots = list(tot=list(part='tot', caption='Total tree biomass', file='tot-raw-biomass'),
+    hardwood=list(part='hardwood', caption='Total hardwood tree biomass', file='hardwood-raw-biomass'),
+    softwood=list(part='softwood', caption='Total softwood tree biomass', file='softwood-raw-biomass')
+)
 
-pdf("~/git/paleon/figures/prelim-talk/raw-biomass.pdf", width=10, height=6)
-p
-dev.off()
+data = biomass
+
+for (item in plots) {
+    p = ggplot(data) +
+        aes(x,y) +
+        aes_string(color=item[['part']]) +
+        scale_color_gradient("biomass", trans='log', low='white', high='blue',
+            limits=range(data$tot[data$tot>0]),
+            breaks=c(2, 150, 8000, 400000)) +
+        geom_point(shape=15, solid=TRUE) +
+        ggtitle(item[['caption']])
+
+    pdf(paste("~/git/paleon/figures/prelim-talk/", item[['file']], ".pdf", sep=''), width=10, height=6)
+    print(p)
+    dev.off()
+}
 
 
 #Histogram of biomass (marginal):
