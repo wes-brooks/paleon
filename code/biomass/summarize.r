@@ -53,8 +53,8 @@ dev.off()
 require(fBasics)
 #hard = read.csv("/NO_BACKUP/brooks/paleon/paleon/output/logbiomass-NA-hardwood.csv", header=FALSE)
 #soft = read.csv("/NO_BACKUP/brooks/paleon/paleon/output/logbiomass-NA-softwood.csv", header=FALSE)
-hard = read.csv("~/misc/paleon/logbiomass-WI-hardwood.csv", header=FALSE)
-soft = read.csv("~/misc/paleon/logbiomass-WI-softwood.csv", header=FALSE)
+hard = read.csv("~/Dropbox/logbiomass-WI-hardwood.csv", header=FALSE)
+soft = read.csv("~/Dropbox/logbiomass-WI-softwood.csv", header=FALSE)
 
 hh = colMeans(exp(hard))
 ss = colMeans(exp(soft))
@@ -62,13 +62,13 @@ ss = colMeans(exp(soft))
 hh.sd = colStdevs(exp(hard))
 ss.sd = colStdevs(exp(soft))
 
-rm(hard)
-rm(soft)
+#rm(hard)
+#rm(soft)
 
 #hard2 = cbind(biomass[,c('x','y')], mean=hh, sd=hh.sd)
 #soft2 = cbind(biomass[,c('x','y')], mean=ss, sd=ss.sd)
-hard2 = cbind(biomass.wi[,c('x','y')], mean=hh, sd=hh.sd)
-soft2 = cbind(biomass.wi[,c('x','y')], mean=ss, sd=ss.sd)
+hard2 = cbind(biomass.wi[,c('x','y')], obs=biomass.wi$hardwood, mean=hh, sd=hh.sd)
+soft2 = cbind(biomass.wi[,c('x','y')], obs=biomass.wi$softwood, mean=ss, sd=ss.sd)
 
 
 rr = c(min(min(hard2$mean), min(soft2$mean)), max(max(hard2$mean), max(soft2$mean)))
@@ -80,9 +80,9 @@ plots = list(hardwood=list(data=hard2, caption='hardwood'),
 )
 
 for (item in plots) {
-    p = ggplot(item[['data']]) +
+    p0 = ggplot(item[['data']]) +
         aes(x,y) +
-        aes_string(color='mean') +
+        aes_string(color='obs') +
         scale_color_gradient("biomass", trans='log', low='white', high='blue',
             limits=rr,
             #breaks=c(2, 150, 8100, 442400),
@@ -92,13 +92,27 @@ for (item in plots) {
         geom_point(shape=15, solid=TRUE) #+
         #ggtitle(paste("Mean ", item[['caption']], " biomass", sep=''))
 
-    #pdf(paste("/NO_BACKUP/brooks/paleon/paleon/figures/biomass/", item[['caption']], "-mean-biomass.pdf", sep=''), width=10, height=6)
-    pdf(paste("~/misc/paleon/figures/", item[['caption']], "-mean-biomass.pdf", sep=''), width=5, height=4)
-    print(p)
+    pdf(paste("~/misc/paleon/figures/", item[['caption']], "-WI-biomass-raw.pdf", sep=''), width=5, height=4)
+    print(p0)
     dev.off()
 
+    p1 = ggplot(item[['data']]) +
+        aes(x,y) +
+        aes_string(color='mean') +
+        scale_color_gradient("mean", trans='log', low='white', high='blue',
+            limits=rr,
+            #breaks=c(2, 150, 8100, 442400),
+            #labels=c("0.002", "0.150", "8.100", "442.4")) +
+            breaks=c(1, 20, 400, 8000)) +
+            
+        geom_point(shape=15, solid=TRUE) #+
+        #ggtitle(paste("Mean ", item[['caption']], " biomass", sep=''))
 
-    p = ggplot(item[['data']]) +
+    pdf(paste("~/misc/paleon/figures/", item[['caption']], "-WI-biomass-mean.pdf", sep=''), width=5, height=4)
+    print(p1)
+    dev.off()
+
+    p2 = ggplot(item[['data']]) +
         aes(x,y) +
         aes_string(color='sd') +
         scale_color_gradient("st. dev.", trans='log', low='white', high='blue',
@@ -109,8 +123,8 @@ for (item in plots) {
         #ggtitle(paste("Standard deviation of ", item[['caption']], " biomass", sep=''))
 
     #pdf(paste("/NO_BACKUP/brooks/paleon/paleon/figures/biomass/", item[['caption']], "-sd-biomass.pdf", sep=''), width=10, height=6)
-    pdf(paste("~/misc/paleon/figures/", item[['caption']], "-sd-biomass.pdf", sep=''), width=5, height=4)
-    print(p)
+    pdf(paste("~/misc/paleon/figures/", item[['caption']], "-WI-biomass-sd.pdf", sep=''), width=5, height=4)
+    print(p2)
     dev.off()
 }
 
