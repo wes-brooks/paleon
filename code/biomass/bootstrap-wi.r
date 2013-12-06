@@ -106,7 +106,7 @@ for (i in 1:S) {
     
     #Evaluate the linear predictors for each draw of the coefficients and write to disk:
     lp = Xp %*% t(beta.resampled)
-    write.table(t(lp), file=paste("output/logbiomass-", cluster, "-", taxon, ".csv", sep=""),
+    write.table(t(lp), file=paste("output/logbiomass-", cluster, "-", taxon, "-wi.csv", sep=""),
         append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
     lp = NULL
     beta.resampled = NULL
@@ -128,6 +128,6 @@ write.table(params, file=paste("output/params-", cluster, "-", taxon, "-wi.csv",
     append=FALSE, row.names=FALSE, col.names=FALSE, sep=',')
 
 #Finalize timing:
-sink(paste("output/", taxon, "-log.txt", sep=""), append=TRUE)
+sink(paste("output/", taxon, "-wi-log.txt", sep=""), append=TRUE)
 print(proc.time() - ptm.tot)
 sink()
