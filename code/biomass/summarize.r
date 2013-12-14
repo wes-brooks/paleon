@@ -55,12 +55,16 @@ require(fBasics)
 #soft = read.csv("/NO_BACKUP/brooks/paleon/paleon/output/logbiomass-NA-softwood.csv", header=FALSE)
 hard = read.csv("~/Dropbox/logbiomass-WI-hardwood.csv", header=FALSE)
 soft = read.csv("~/Dropbox/logbiomass-WI-softwood.csv", header=FALSE)
+tot = read.csv("~/misc/paleon/logbiomass-NA-tot-wi.csv", header=FALSE)
 
 hh = colMeans(exp(hard))
 ss = colMeans(exp(soft))
+tt = colMeans(exp(tot))
 
 hh.sd = colStdevs(exp(hard))
 ss.sd = colStdevs(exp(soft))
+tt.sd = colStdevs(exp(tot))
+
 
 #rm(hard)
 #rm(soft)
@@ -69,13 +73,16 @@ ss.sd = colStdevs(exp(soft))
 #soft2 = cbind(biomass[,c('x','y')], mean=ss, sd=ss.sd)
 hard2 = cbind(biomass.wi[,c('x','y')], obs=biomass.wi$hardwood, mean=hh, sd=hh.sd)
 soft2 = cbind(biomass.wi[,c('x','y')], obs=biomass.wi$softwood, mean=ss, sd=ss.sd)
+tot2 = cbind(biomass.wi[,c('x','y')], obs=biomass.wi$tot, mean=tt, sd=tt.sd)
 
 
-rr = c(min(min(hard2$mean), min(soft2$mean)), max(max(hard2$mean), max(soft2$mean)))
-rr.sd = c(min(min(hard2$sd), min(soft2$sd)), max(max(hard2$sd), max(soft2$sd)))
+rr = c(min(min(tot2$mean), min(hard2$mean), min(soft2$mean)), max(max(tot2$mean), max(hard2$mean), max(soft2$mean)))
+rr.sd = c(min(min(tot2$sd), min(hard2$sd), min(soft2$sd)), max(max(tot2$sd), max(hard2$sd), max(soft2$sd)))
 
 #Maps of raw biomass:
-plots = list(hardwood=list(data=hard2, caption='hardwood'),
+plots = list(
+    total=list(data=tot2, caption='total'),
+    hardwood=list(data=hard2, caption='hardwood'),
     softwood=list(data=soft2, caption='softwood')
 )
 
